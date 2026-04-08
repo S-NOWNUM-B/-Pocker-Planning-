@@ -1,0 +1,30 @@
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.icon {
+  margin-bottom: 16px;
+  color: var(--color-text-muted);
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.description {
+  margin: 0 0 20px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.action {
+  margin-top: 8px;
+}
