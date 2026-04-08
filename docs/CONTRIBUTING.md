@@ -139,11 +139,17 @@ git rebase upstream/develop
 pnpm format:check
 pnpm lint
 
-# Опционально: автоформатирование
+# Точечные проверки (по инструментам)
+pnpm lint:eslint
+pnpm lint:style
+
+# Опционально: автоисправление
+pnpm lint:fix
 pnpm format
 
-# Опционально: отдельная проверка CSS frontend
-pnpm --filter @poker/frontend exec stylelint "src/**/*.css"
+# Опционально: точечные автоисправления frontend
+pnpm --filter @poker/frontend lint:eslint:fix
+pnpm --filter @poker/frontend lint:style:fix
 ```
 
 Если есть ошибки форматирования или стиля, исправьте их до создания PR.
@@ -160,6 +166,7 @@ pnpm --filter @poker/frontend exec stylelint "src/**/*.css"
 - [ ] Обновлена документация при изменении поведения
 - [ ] Изменения проходят локальные проверки
 - [ ] `pnpm format:check` и `pnpm lint` проходят без ошибок
+- [ ] При необходимости выполнен `pnpm lint:fix`
 
 ### Шаблон описания PR
 
@@ -199,7 +206,7 @@ Closes #123
 
 ### Что проверяет CI
 
-- Frontend: `pnpm lint` и `pnpm build`
+- Frontend: `pnpm lint`, `pnpm typecheck` и `pnpm build`
 - Backend: smoke-проверки контрактов REST/WebSocket и инфраструктурные проверки
 
 ---

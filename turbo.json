@@ -15,6 +15,18 @@
     "lint:fix": {
       "dependsOn": ["^lint:fix"]
     },
+    "lint:eslint": {
+      "dependsOn": ["^lint:eslint"]
+    },
+    "lint:eslint:fix": {
+      "dependsOn": ["^lint:eslint:fix"]
+    },
+    "lint:style": {
+      "dependsOn": ["^lint:style"]
+    },
+    "lint:style:fix": {
+      "dependsOn": ["^lint:style:fix"]
+    },
     "typecheck": {
       "dependsOn": ["^typecheck"]
     }

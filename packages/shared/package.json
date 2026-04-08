@@ -7,8 +7,12 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint src --ext .ts --max-warnings=0",
-    "lint:fix": "eslint src --ext .ts --fix && prettier --write \"src/**/*.ts\"",
+    "lint": "pnpm lint:eslint",
+    "lint:fix": "pnpm lint:eslint:fix && pnpm format",
+    "lint:eslint": "eslint src --ext .ts --max-warnings=0",
+    "lint:eslint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   }
 }

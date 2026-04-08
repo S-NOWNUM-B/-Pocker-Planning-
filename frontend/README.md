@@ -122,6 +122,21 @@ pnpm --filter @poker/frontend preview
 # Линтинг frontend
 pnpm --filter @poker/frontend lint
 
+# Автоисправление линтинга + форматирование frontend/src
+pnpm --filter @poker/frontend lint:fix
+
+# Только ESLint frontend (проверка / автоисправление)
+pnpm --filter @poker/frontend lint:eslint
+pnpm --filter @poker/frontend lint:eslint:fix
+
+# Только Stylelint frontend (проверка / автоисправление)
+pnpm --filter @poker/frontend lint:style
+pnpm --filter @poker/frontend lint:style:fix
+
+# Форматирование frontend/src
+pnpm --filter @poker/frontend format
+pnpm --filter @poker/frontend format:check
+
 # Проверка типов frontend
 pnpm --filter @poker/frontend typecheck
 ```

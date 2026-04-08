@@ -8,6 +8,10 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix && pnpm format",
+    "lint:eslint": "turbo run lint:eslint",
+    "lint:eslint:fix": "turbo run lint:eslint:fix",
+    "lint:style": "turbo run lint:style",
+    "lint:style:fix": "turbo run lint:style:fix",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

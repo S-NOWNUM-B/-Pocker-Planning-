@@ -174,6 +174,17 @@ pnpm build
 # Линтинг всех пакетов
 pnpm lint
 
+# Автоисправление линтинга + форматирование
+pnpm lint:fix
+
+# Только ESLint (проверка / автоисправление)
+pnpm lint:eslint
+pnpm lint:eslint:fix
+
+# Только Stylelint (проверка / автоисправление)
+pnpm lint:style
+pnpm lint:style:fix
+
 # Проверка типов
 pnpm typecheck
 
@@ -198,4 +209,16 @@ pnpm --filter @poker/frontend preview
 
 # Линтинг frontend
 pnpm --filter @poker/frontend lint
+
+# Только ESLint frontend
+pnpm --filter @poker/frontend lint:eslint
+pnpm --filter @poker/frontend lint:eslint:fix
+
+# Только Stylelint frontend
+pnpm --filter @poker/frontend lint:style
+pnpm --filter @poker/frontend lint:style:fix
+
+# Форматирование только frontend/src
+pnpm --filter @poker/frontend format
+pnpm --filter @poker/frontend format:check
 ```
