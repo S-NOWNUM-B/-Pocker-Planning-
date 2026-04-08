@@ -1,5 +1,10 @@
 import { type HTMLAttributes, type ReactNode } from 'react';
-import styles from './Card.module.css';
+
+const variantClasses = {
+  default: 'bg-white border border-gray-300',
+  elevated: 'bg-white shadow-md',
+  outlined: 'bg-transparent border-2 border-gray-300',
+};
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -8,7 +13,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Card({ className = '', variant = 'default', children, ...props }: CardProps) {
   return (
-    <div className={`${styles.card} ${styles[variant]} ${className}`} {...props}>
+    <div className={`rounded-xl p-5 ${variantClasses[variant]} ${className}`} {...props}>
       {children}
     </div>
   );

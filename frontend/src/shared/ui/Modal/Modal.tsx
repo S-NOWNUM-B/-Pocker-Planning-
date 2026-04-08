@@ -1,5 +1,4 @@
 import { type HTMLAttributes, type ReactNode } from 'react';
-import styles from './Modal.module.css';
 
 interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -12,21 +11,27 @@ export function Modal({ children, isOpen, onClose, title, className = '', ...pro
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]"
+      onClick={onClose}
+    >
       <div
-        className={`${styles.modal} ${className}`}
+        className={`bg-white rounded-2xl p-6 max-w-[500px] w-[90%] max-h-[90vh] overflow-y-auto ${className}`}
         onClick={(e) => e.stopPropagation()}
         {...props}
       >
         {title && (
-          <div className={styles.header}>
-            <h2 className={styles.title}>{title}</h2>
-            <button className={styles.close} onClick={onClose}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">{title}</h2>
+            <button
+              className="bg-none border-none text-2xl cursor-pointer text-gray-500 hover:text-gray-700 p-1"
+              onClick={onClose}
+            >
               ×
             </button>
           </div>
         )}
-        <div className={styles.content}>{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );

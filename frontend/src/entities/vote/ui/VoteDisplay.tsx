@@ -1,6 +1,11 @@
 import { VOTE_LABELS } from '../model/types';
 import type { VoteValue } from '@poker/shared';
-import styles from './VoteDisplay.module.css';
+
+const sizeClasses = {
+  sm: 'w-10 h-14 text-base',
+  md: 'w-[60px] h-21 text-xl',
+  lg: 'w-20 h-28 text-2xl',
+};
 
 interface VoteDisplayProps {
   value: VoteValue;
@@ -8,17 +13,17 @@ interface VoteDisplayProps {
   revealed?: boolean;
 }
 
-const sizeMap = {
-  sm: 'sm',
-  md: 'md',
-  lg: 'lg',
-};
-
 export function VoteDisplay({ value, size = 'md', revealed = true }: VoteDisplayProps) {
   const label = VOTE_LABELS[value];
 
   return (
-    <div className={`${styles.vote} ${styles[sizeMap[size]]} ${!revealed ? styles.hidden : ''}`}>
+    <div
+      className={`inline-flex items-center justify-center font-semibold rounded-lg border-2 ${
+        revealed
+          ? 'bg-white border-gray-300 text-gray-900'
+          : 'bg-indigo-500 text-white border-indigo-500'
+      } ${sizeClasses[size]}`}
+    >
       {revealed ? label : '?'}
     </div>
   );

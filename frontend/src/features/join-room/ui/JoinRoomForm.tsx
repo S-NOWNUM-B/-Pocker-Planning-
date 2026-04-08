@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button } from '@/shared/ui';
-import styles from './JoinRoomForm.module.css';
 
 export function JoinRoomForm() {
   const [roomId, setRoomId] = useState('');
@@ -15,7 +14,7 @@ export function JoinRoomForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <Input
         label="Room ID"
         placeholder="Enter room ID..."

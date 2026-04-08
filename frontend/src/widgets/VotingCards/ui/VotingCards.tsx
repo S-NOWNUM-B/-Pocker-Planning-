@@ -1,7 +1,6 @@
 import { VoteButton } from '@/features/vote';
 import { Card } from '@/shared/ui';
 import type { VoteValue } from '@poker/shared';
-import styles from './VotingCards.module.css';
 
 const VOTE_VALUES: VoteValue[] = ['0', '1/2', '1', '2', '3', '5', '8', '13', '21', '?', 'coffee'];
 
@@ -12,10 +11,10 @@ interface VotingCardsProps {
 
 export function VotingCards({ roomId, disabled = false }: VotingCardsProps) {
   return (
-    <section className={styles.section}>
-      <h2 className={styles.title}>Cast Your Vote</h2>
-      <Card className={styles.cards}>
-        <div className={styles.grid}>
+    <section className="p-5">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">Cast Your Vote</h2>
+      <Card className="p-6">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-3 justify-items-center">
           {VOTE_VALUES.map((vote) => (
             <VoteButton key={vote} roomId={roomId} vote={vote} disabled={disabled} />
           ))}

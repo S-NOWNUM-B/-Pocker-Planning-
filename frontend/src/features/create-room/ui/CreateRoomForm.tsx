@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button } from '@/shared/ui';
 import { roomApi } from '@/entities/room';
-import styles from './CreateRoomForm.module.css';
 
 export function CreateRoomForm() {
   const [name, setName] = useState('');
@@ -26,7 +25,7 @@ export function CreateRoomForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <Input
         label="Room Name"
         placeholder="Enter room name..."

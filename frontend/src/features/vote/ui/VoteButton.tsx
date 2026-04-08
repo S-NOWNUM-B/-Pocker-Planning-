@@ -2,7 +2,6 @@ import { Button } from '@/shared/ui';
 import { useVote } from '../lib/useVote';
 import type { VoteValue } from '@poker/shared';
 import { VOTE_LABELS } from '@/entities/vote';
-import styles from './VoteButton.module.css';
 
 interface VoteButtonProps {
   roomId: string;
@@ -19,7 +18,7 @@ export function VoteButton({ roomId, vote, disabled }: VoteButtonProps) {
       onClick={() => mutate(vote)}
       disabled={disabled || isPending}
       variant="card"
-      className={styles['vote-button']}
+      className="transition-all hover:-translate-y-1"
     >
       {label}
     </Button>

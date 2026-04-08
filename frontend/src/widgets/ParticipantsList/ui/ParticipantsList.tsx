@@ -1,7 +1,6 @@
 import { ParticipantCard, sortParticipants } from '@/entities/participant';
 import { EmptyState } from '@/shared/ui';
 import type { Participant } from '@poker/shared';
-import styles from './ParticipantsList.module.css';
 
 interface ParticipantsListProps {
   participants: Participant[];
@@ -17,9 +16,11 @@ export function ParticipantsList({ participants }: ParticipantsListProps) {
   const sortedParticipants = [...participants].sort(sortParticipants);
 
   return (
-    <section className={styles.section}>
-      <h2 className={styles.title}>Participants ({participants.length})</h2>
-      <ul className={styles.list}>
+    <section className="p-5">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        Participants ({participants.length})
+      </h2>
+      <ul className="flex flex-col gap-2 list-none p-0 m-0">
         {sortedParticipants.map((participant) => (
           <ParticipantCard key={participant.id} participant={participant} />
         ))}

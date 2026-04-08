@@ -1,6 +1,5 @@
 import { getInitials } from '../model/selectors';
 import type { Participant } from '../model/types';
-import styles from './ParticipantCard.module.css';
 
 interface ParticipantCardProps {
   participant: Participant;
@@ -11,14 +10,16 @@ export function ParticipantCard({ participant, showVoteStatus = true }: Particip
   const initials = getInitials(participant.name);
 
   return (
-    <li className={styles.card}>
-      <div className={styles.avatar}>{initials}</div>
-      <div className={styles.info}>
-        <span className={styles.name}>{participant.name}</span>
+    <li className="flex items-center gap-3 p-3 bg-white border border-gray-300 rounded-lg">
+      <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold text-sm flex-shrink-0">
+        {initials}
+      </div>
+      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+        <span className="font-medium text-gray-900 overflow-hidden text-ellipsis whitespace-nowrap">
+          {participant.name}
+        </span>
         {showVoteStatus && (
-          <span
-            className={`${styles.status} ${participant.hasVoted ? styles.voted : styles.pending}`}
-          >
+          <span className={`text-xs ${participant.hasVoted ? 'text-green-600' : 'text-gray-400'}`}>
             {participant.hasVoted ? '✓ Voted' : 'Pending'}
           </span>
         )}
