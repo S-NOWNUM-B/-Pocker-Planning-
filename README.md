@@ -85,7 +85,7 @@ flowchart LR
     subgraph FE["Frontend (React + Vite)"]
         Router["React Router /\n(Framework Mode)"]
         Pages["Pages /\n(Home, Room, Results)"]
-        Components["UI Components /\n(shadcn/ui + Tailwind)"]
+        Components["UI Components /\n(Custom + Tailwind)"]
     end
 
     subgraph State["Состояние"]
