@@ -13,7 +13,7 @@ export function ParticipantsList({ players, isRevealed }: ParticipantsListProps)
   }
 
   return (
-    <section className="flex flex-1 items-center justify-center py-4">
+    <section className="mx-auto flex w-full max-w-7xl items-center justify-center px-4 py-2 sm:px-6 lg:px-8">
       <Card className="border border-border/70 bg-card/80 px-6 py-5 shadow-sm">
         <div className="mb-4 flex items-center justify-between gap-4">
           <h2 className="text-lg font-bold text-foreground">Участники</h2>

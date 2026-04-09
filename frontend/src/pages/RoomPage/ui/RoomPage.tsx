@@ -196,7 +196,7 @@ export function RoomPage() {
         onExit={handleExitRoom}
       />
 
-      <main className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:px-8">
+      <main className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:px-8">
         <TaskSidebar
           tasks={tasks}
           activeTaskId={activeTaskId}

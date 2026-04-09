@@ -22,7 +22,7 @@ export function RoomResults({
   onNextTask,
 }: RoomResultsProps) {
   return (
-    <section className="relative flex min-h-144 flex-1 flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/80 shadow-2xl backdrop-blur">
+    <section className="relative flex min-h-28rem flex-1 flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/80 shadow-2xl backdrop-blur lg:min-h-32rem">
       <div className="absolute inset-4 rounded-4xl bg-table/95 shadow-inner" />
       <div className="absolute inset-4 rounded-4xl border-4 border-table-border/50" />
 

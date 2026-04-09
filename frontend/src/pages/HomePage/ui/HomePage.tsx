@@ -5,7 +5,6 @@ import {
   LinkIcon,
   MoonIcon,
   PlayIcon,
-  SparklesIcon,
   SunIcon,
   TrophyIcon,
   UsersIcon,
@@ -16,11 +15,11 @@ import { useTheme } from '@/shared/lib/hooks';
 const DECK_INFO: Record<DeckType, { title: string; description: string }> = {
   fibonacci: {
     title: 'Фибоначчи',
-    description: '0, 1, 2, 3, 5, 8, 13, 21, ?, ☕',
+    description: '0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ?, ☕',
   },
   even: {
     title: 'Чётная',
-    description: '0, 2, 4, 6, 8, 10, 12, 14, ?, ☕',
+    description: '0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, ?, ☕',
   },
 };
 
@@ -69,19 +68,13 @@ export function HomePage() {
       <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <section className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-sm shadow-sm backdrop-blur">
-              <SparklesIcon className="h-4 w-4 text-primary" />
-              Poker Planning, перенесённый в ваш стек
-            </div>
-
             <div className="space-y-4">
               <h1 className="text-5xl font-black tracking-tight text-foreground sm:text-6xl">
                 Planning Poker
-                <span className="block text-primary">без лишней обвязки Next.js</span>
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
                 Создайте комнату, выберите колоду, войдите в раунд и оценивайте задачи в одном
-                потоке. Всё работает внутри вашего React + Vite приложения.
+                потоке
               </p>
             </div>
 

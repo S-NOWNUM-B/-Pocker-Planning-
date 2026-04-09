@@ -26,8 +26,8 @@ export interface GameSession {
 }
 
 export const DECKS: Record<DeckType, string[]> = {
-  fibonacci: ['0', '1', '2', '3', '5', '8', '13', '21', '?', '☕'],
-  even: ['0', '2', '4', '6', '8', '10', '12', '14', '?', '☕'],
+  fibonacci: ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?', '☕'],
+  even: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '?', '☕'],
 };
 
 export const SESSION_STORAGE_KEY = 'poker-planning:session';
