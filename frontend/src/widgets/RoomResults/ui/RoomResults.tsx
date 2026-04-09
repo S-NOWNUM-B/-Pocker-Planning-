@@ -27,32 +27,32 @@ export function RoomResults({
   return (
     <section
       className={cn(
-        'relative flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/80 shadow-2xl backdrop-blur',
+        'relative flex flex-col overflow-hidden rounded-2xl border border-border/70 bg-card/80 shadow-2xl backdrop-blur sm:rounded-3xl',
         className,
       )}
     >
       <div className="absolute inset-0 bg-linear-to-br from-table/95 via-table/90 to-table" />
-      <div className="absolute inset-2.5 rounded-[1.35rem] border border-table-border/55" />
+      <div className="absolute inset-2 rounded-2xl border border-table-border/55 sm:inset-2.5 sm:rounded-[1.35rem]" />
 
-      <div className="relative z-10 flex h-full min-h-0 flex-col p-2.5 sm:p-3">
-        <Card className="border border-border/70 bg-card/95 p-3 shadow-lg">
-          <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+      <div className="relative z-10 flex h-full min-h-0 flex-col p-2 sm:p-3">
+        <Card className="border border-border/70 bg-card/95 p-2.5 shadow-lg sm:p-3">
+          <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-3 sm:items-center">
             <div>
-              <div className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              <div className="text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-[0.65rem] sm:tracking-[0.24em]">
                 Активная задача
               </div>
-              <div className="mt-0.5 line-clamp-2 text-lg font-bold text-foreground sm:text-xl">
+              <div className="mt-0.5 line-clamp-2 text-base font-bold text-foreground sm:text-xl">
                 {activeTaskTitle ?? 'Добавьте задачу для оценки'}
               </div>
             </div>
-            <div className="rounded-2xl border border-border bg-secondary/45 px-3.5 py-2.5 text-right">
+            <div className="rounded-xl border border-border bg-secondary/45 px-3 py-2 text-right sm:rounded-2xl sm:px-3.5 sm:py-2.5">
               <div className="text-xs text-muted-foreground">Среднее</div>
-              <div className="text-xl font-black text-foreground">{average} SP</div>
+              <div className="text-lg font-black text-foreground sm:text-xl">{average} SP</div>
             </div>
           </div>
         </Card>
 
-        <div className="flex min-h-0 flex-1 items-center justify-center px-3 py-1.5">
+        <div className="flex min-h-0 flex-col gap-2 px-2 py-2 sm:gap-3 sm:px-3 sm:py-3">
           {isRevealed ? (
             <div className="flex w-full flex-col items-center gap-2 text-center">
               <Card className="w-full max-w-[20rem] border border-primary/50 bg-card/95 p-3.5 text-center shadow-xl">
@@ -86,7 +86,7 @@ export function RoomResults({
                 type="button"
                 onClick={onReveal}
                 disabled={!hasActiveTask || (!allPlayersVoted && !anyPlayerVoted)}
-                className="h-10 rounded-2xl px-7 text-base font-semibold shadow-lg"
+                className="h-10 rounded-2xl px-6 text-sm font-semibold shadow-lg sm:px-7 sm:text-base"
               >
                 Вскрыть карты
               </Button>

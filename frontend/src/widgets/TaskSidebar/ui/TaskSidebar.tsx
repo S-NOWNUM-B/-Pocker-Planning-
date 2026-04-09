@@ -38,7 +38,7 @@ export function TaskSidebar({
         </span>
       </div>
 
-      <div className="mb-3 min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
+      <div className="mb-3 max-h-58 space-y-2 overflow-y-auto pr-1 lg:min-h-0 lg:flex-1 lg:max-h-none">
         {tasks.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-secondary/30 p-6 text-center text-sm text-muted-foreground">
             Добавьте первую задачу, чтобы начать оценку

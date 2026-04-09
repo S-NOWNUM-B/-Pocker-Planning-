@@ -195,7 +195,7 @@ export function RoomPage() {
         onExit={handleExitRoom}
       />
 
-      <main className="mx-auto grid w-full max-w-7xl min-h-0 flex-1 gap-2.5 px-4 py-2.5 sm:px-6 sm:py-3 lg:grid-cols-[20rem_minmax(0,1fr)] lg:px-8">
+      <main className="mx-auto grid w-full max-w-7xl min-h-0 flex-1 gap-2.5 overflow-y-auto px-4 py-2.5 pb-3 sm:px-6 sm:py-3 sm:pb-4 lg:grid-cols-[20rem_minmax(0,1fr)] lg:overflow-visible lg:px-8">
         <TaskSidebar
           tasks={tasks}
           activeTaskId={activeTaskId}
@@ -204,7 +204,7 @@ export function RoomPage() {
           onNewTaskTitleChange={setNewTaskTitle}
           onAddTask={handleAddTask}
           onSelectTask={setActiveTaskId}
-          className="h-full min-h-0 lg:max-h-full"
+          className="h-auto min-h-0 lg:h-full lg:max-h-full"
         />
 
         <div className="grid min-w-0 min-h-0 gap-2.5 lg:grid-rows-[minmax(0,1.8fr)_auto]">
@@ -216,7 +216,7 @@ export function RoomPage() {
             anyPlayerVoted={anyPlayerVoted}
             onReveal={handleReveal}
             onNextTask={handleClearTable}
-            className="h-full min-h-14rem"
+            className="h-auto min-h-48 lg:h-full"
           />
 
           <ParticipantsList

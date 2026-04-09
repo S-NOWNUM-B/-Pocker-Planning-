@@ -39,9 +39,21 @@ export function VotingCards({
               className="flex h-12 w-10 rounded-lg text-sm font-black shadow-sm transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:w-11 sm:text-base"
             >
               {card === '☕' ? (
-                <CoffeeIcon className="h-7 w-7 sm:h-8 sm:w-8" strokeWidth={2.8} />
+                <span
+                  className={`flex h-7 w-7 items-center justify-center rounded-full ${
+                    selectedCard === card ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary'
+                  }`}
+                >
+                  <CoffeeIcon className="h-5 w-5" strokeWidth={2.8} />
+                </span>
               ) : card === '?' ? (
-                <HelpCircleIcon className="h-7 w-7 sm:h-8 sm:w-8" strokeWidth={2.8} />
+                <span
+                  className={`flex h-7 w-7 items-center justify-center rounded-full ${
+                    selectedCard === card ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary'
+                  }`}
+                >
+                  <HelpCircleIcon className="h-5 w-5" strokeWidth={2.8} />
+                </span>
               ) : (
                 card
               )}
