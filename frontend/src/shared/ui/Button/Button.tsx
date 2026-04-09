@@ -1,11 +1,11 @@
 import { type ButtonHTMLAttributes, forwardRef } from 'react';
 
 export const variantClasses = {
-  primary: 'bg-blue-500 text-white hover:bg-blue-600',
-  secondary: 'bg-indigo-500 text-white hover:bg-indigo-600',
-  outline: 'bg-transparent border-2 border-gray-300 text-gray-700 hover:border-blue-500',
-  card: 'bg-white text-gray-900 border-2 border-gray-300 hover:border-blue-500 aspect-[3/4] text-xl',
-  ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
+  primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+  outline: 'border border-border bg-card/70 text-foreground hover:border-primary/55 hover:bg-secondary/60',
+  card: 'aspect-[3/4] border border-border bg-card text-card-foreground text-xl hover:border-primary/55 hover:bg-card/90',
+  ghost: 'bg-transparent text-foreground/85 hover:bg-secondary/60',
 };
 
 export const sizeClasses = {
@@ -24,7 +24,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`inline-flex items-center justify-center gap-2 font-medium border-none rounded-lg cursor-pointer transition-all font-inherit disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+        className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg font-inherit font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50 hover:-translate-y-0.5 active:translate-y-0 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
         {...props}
       >
         {children}

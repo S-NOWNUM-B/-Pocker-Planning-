@@ -12,19 +12,19 @@ export function Modal({ children, isOpen, onClose, title, className = '', ...pro
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-1000"
+      className="fixed inset-0 z-1000 flex items-center justify-center bg-black/55 px-4"
       onClick={onClose}
     >
       <div
-        className={`bg-white rounded-2xl p-6 max-w-500px w-[90%] max-h-[90vh] overflow-y-auto ${className}`}
+        className={`max-h-[90vh] w-full max-w-125 overflow-y-auto rounded-2xl border border-border/70 bg-card p-6 text-card-foreground shadow-2xl ${className}`}
         onClick={(e) => e.stopPropagation()}
         {...props}
       >
         {title && (
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">{title}</h2>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-foreground">{title}</h2>
             <button
-              className="bg-none border-none text-2xl cursor-pointer text-gray-500 hover:text-gray-700 p-1"
+              className="cursor-pointer rounded-md p-1 text-xl leading-none text-muted-foreground transition hover:bg-secondary/70 hover:text-foreground"
               onClick={onClose}
             >
               ×

@@ -1,6 +1,5 @@
-import { Button, Input } from '@/shared/ui';
+import { Input } from '@/shared/ui';
 import { cn } from '@/shared/lib';
-import { PlusIcon } from '@/shared/ui/icons';
 import type { Task } from '@/shared/lib/poker';
 
 interface TaskSidebarProps {
@@ -87,15 +86,6 @@ export function TaskSidebar({
             }
           }}
         />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onAddTask}
-          disabled={!newTaskTitle.trim()}
-          className="absolute right-1 top-1 h-9 w-9 rounded-lg p-0"
-        >
-          <PlusIcon className="h-4 w-4" />
-        </Button>
       </div>
     </aside>
   );

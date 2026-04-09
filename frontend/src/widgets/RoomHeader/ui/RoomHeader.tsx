@@ -50,7 +50,12 @@ export function RoomHeader({
             <LinkIcon className="h-4 w-4" />
             <span className="hidden sm:inline">{copyLabel}</span>
           </Button>
-          <Button type="button" variant="ghost" onClick={onExit} className="h-10 rounded-xl px-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onExit}
+            className="h-10 rounded-xl border-primary/60 px-3 text-foreground hover:border-destructive/75 hover:bg-destructive/10 hover:text-destructive"
+          >
             <LogOutIcon className="h-4 w-4" />
             <span className="hidden sm:inline">Выйти</span>
           </Button>

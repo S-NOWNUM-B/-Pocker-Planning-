@@ -1,9 +1,9 @@
 const colorClasses = {
-  blue: 'bg-blue-100 text-blue-800',
-  green: 'bg-green-100 text-green-800',
-  yellow: 'bg-yellow-100 text-yellow-800',
-  red: 'bg-red-100 text-red-800',
-  gray: 'bg-gray-100 text-gray-800',
+  blue: 'border border-blue-500/25 bg-blue-500/12 text-blue-700 dark:text-blue-300',
+  green: 'border border-emerald-500/25 bg-emerald-500/12 text-emerald-700 dark:text-emerald-300',
+  yellow: 'border border-amber-500/25 bg-amber-500/12 text-amber-700 dark:text-amber-300',
+  red: 'border border-red-500/25 bg-red-500/12 text-red-700 dark:text-red-300',
+  gray: 'border border-border bg-secondary/55 text-secondary-foreground',
 };
 
 export type BadgeColor = keyof typeof colorClasses;
@@ -16,7 +16,7 @@ export interface BadgeProps {
 export function Badge({ label, color = 'gray' }: BadgeProps) {
   return (
     <span
-      className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${colorClasses[color]}`}
+      className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wider ${colorClasses[color]}`}
     >
       {label}
     </span>

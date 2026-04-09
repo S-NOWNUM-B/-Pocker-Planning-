@@ -73,7 +73,7 @@ export function RoomResults({
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3 text-center">
-              <div className="text-sm font-medium text-primary-foreground/92 drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
+              <div className="text-sm font-medium text-white/90 drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]">
                 {allPlayersVoted
                   ? 'Все участники проголосовали. Можно показывать результат.'
                   : anyPlayerVoted
