@@ -1,6 +1,6 @@
 import { Button, Input } from '@/shared/ui';
-import { PlusIcon } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib';
+import { PlusIcon } from '@/shared/ui/icons';
 import type { Task } from '@/shared/lib/poker';
 
 interface TaskSidebarProps {
@@ -27,7 +27,7 @@ export function TaskSidebar({
   return (
     <aside
       className={cn(
-        'w-full shrink-0 rounded-3xl border border-border/70 bg-card/95 p-4 shadow-lg lg:w-80 lg:overflow-auto',
+        'flex h-full min-h-0 w-full shrink-0 flex-col rounded-3xl border border-border/70 bg-card/95 p-4 shadow-lg lg:w-80',
         className,
       )}
     >
@@ -38,7 +38,7 @@ export function TaskSidebar({
         </span>
       </div>
 
-      <div className="mb-4 space-y-2">
+      <div className="mb-3 min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
         {tasks.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-secondary/30 p-6 text-center text-sm text-muted-foreground">
             Добавьте первую задачу, чтобы начать оценку
@@ -74,12 +74,13 @@ export function TaskSidebar({
         )}
       </div>
 
-      <div className="flex gap-2">
+      <div className="relative pt-1">
         <Input
           value={newTaskTitle}
           onChange={(event) => onNewTaskTitleChange(event.target.value)}
           placeholder="Новая задача"
-          className="h-11 flex-1"
+          className="h-11 w-full"
+          style={{ paddingRight: '2.75rem' }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               onAddTask();
@@ -91,7 +92,7 @@ export function TaskSidebar({
           variant="outline"
           onClick={onAddTask}
           disabled={!newTaskTitle.trim()}
-          className="h-11 rounded-xl px-3"
+          className="absolute right-1 top-1 h-9 w-9 rounded-lg p-0"
         >
           <PlusIcon className="h-4 w-4" />
         </Button>

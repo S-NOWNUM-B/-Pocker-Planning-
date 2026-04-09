@@ -85,6 +85,11 @@ export function RoomPage() {
       return;
     }
 
+    if (!activeTask) {
+      setStatusMessage('Сначала создайте задачу, затем выбирайте карту');
+      return;
+    }
+
     setSelectedCard(card);
     setPlayers((currentPlayers) =>
       currentPlayers.map((player) => (!player.isBot ? { ...player, vote: card } : player)),
@@ -92,6 +97,11 @@ export function RoomPage() {
   };
 
   const handleReveal = () => {
+    if (!activeTask) {
+      setStatusMessage('Сначала создайте задачу');
+      return;
+    }
+
     setIsRevealed(true);
     setStatusMessage(
       activeTask ? `Оценка "${activeTask.title}" сохранена: ${average} SP` : 'Результат открыт',
@@ -196,7 +206,7 @@ export function RoomPage() {
         onExit={handleExitRoom}
       />
 
-      <main className="mx-auto grid w-full max-w-7xl min-h-0 flex-1 gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:grid-cols-[19rem_minmax(0,1fr)] lg:px-8">
+      <main className="mx-auto grid w-full max-w-7xl min-h-0 flex-1 gap-2.5 px-4 py-2.5 sm:px-6 sm:py-3 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:px-8">
         <TaskSidebar
           tasks={tasks}
           activeTaskId={activeTaskId}
@@ -208,7 +218,7 @@ export function RoomPage() {
           className="h-full min-h-0 lg:max-h-full"
         />
 
-        <div className="flex min-h-0 flex-col gap-4">
+        <div className="grid min-h-0 gap-2.5 lg:grid-rows-[minmax(0,1.9fr)_minmax(0,0.75fr)]">
           <RoomResults
             activeTaskTitle={activeTask ? activeTask.title : null}
             average={average}
@@ -218,13 +228,13 @@ export function RoomPage() {
             statusMessage={statusMessage}
             onReveal={handleReveal}
             onNextTask={handleClearTable}
-            className="min-h-19rem flex-1"
+            className="h-full min-h-16rem"
           />
 
           <ParticipantsList
             players={players}
             isRevealed={isRevealed}
-            className="min-h-9.5rem shrink-0"
+            className="h-full min-h-5.5rem"
           />
         </div>
       </main>
@@ -232,7 +242,7 @@ export function RoomPage() {
       <VotingCards
         cards={deck}
         selectedCard={selectedCard}
-        disabled={isRevealed}
+        disabled={isRevealed || !activeTask}
         onSelectCard={handleSelectCard}
       />
     </div>
