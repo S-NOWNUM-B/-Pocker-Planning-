@@ -7,7 +7,6 @@ interface RoomResultsProps {
   isRevealed: boolean;
   allPlayersVoted: boolean;
   anyPlayerVoted: boolean;
-  statusMessage: string;
   onReveal: () => void;
   onNextTask: () => void;
   className?: string;
@@ -19,7 +18,6 @@ export function RoomResults({
   isRevealed,
   allPlayersVoted,
   anyPlayerVoted,
-  statusMessage,
   onReveal,
   onNextTask,
   className,
@@ -53,13 +51,6 @@ export function RoomResults({
             </div>
           </div>
         </Card>
-
-        <div className="mt-2 min-h-9 rounded-2xl border border-border/80 bg-card/90 px-3.5 py-2 text-sm text-muted-foreground shadow-sm">
-          {statusMessage ||
-            (hasActiveTask
-              ? 'Выберите карточку и дождитесь команды на вскрытие'
-              : 'Сначала создайте задачу в списке слева')}
-        </div>
 
         <div className="flex min-h-0 flex-1 items-center justify-center px-3 py-1.5">
           {isRevealed ? (

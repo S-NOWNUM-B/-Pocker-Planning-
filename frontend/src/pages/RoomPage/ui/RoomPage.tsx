@@ -46,7 +46,6 @@ export function RoomPage() {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
-  const [statusMessage, setStatusMessage] = useState<string>('');
   const [celebrate, setCelebrate] = useState(false);
 
   useEffect(() => {
@@ -86,7 +85,6 @@ export function RoomPage() {
     }
 
     if (!activeTask) {
-      setStatusMessage('Сначала создайте задачу, затем выбирайте карту');
       return;
     }
 
@@ -98,14 +96,10 @@ export function RoomPage() {
 
   const handleReveal = () => {
     if (!activeTask) {
-      setStatusMessage('Сначала создайте задачу');
       return;
     }
 
     setIsRevealed(true);
-    setStatusMessage(
-      activeTask ? `Оценка "${activeTask.title}" сохранена: ${average} SP` : 'Результат открыт',
-    );
 
     if (activeTaskId) {
       setTasks((currentTasks) =>
@@ -129,11 +123,6 @@ export function RoomPage() {
 
     if (nextTask) {
       setActiveTaskId(nextTask.id);
-      setStatusMessage('');
-    } else if (tasks.length > 0 && tasks.every((task) => task.estimate !== null)) {
-      setStatusMessage('Все задачи оценены');
-    } else {
-      setStatusMessage('');
     }
 
     setIsRevealed(false);
@@ -157,17 +146,15 @@ export function RoomPage() {
     setTasks((currentTasks) => [...currentTasks, newTask]);
     setActiveTaskId((currentActiveTaskId) => currentActiveTaskId ?? newTask.id);
     setNewTaskTitle('');
-    setStatusMessage(`Добавлена задача: ${newTask.title}`);
   };
 
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(`${window.location.origin}/room/${roomId}`);
       setCopyState('copied');
-      setStatusMessage('Ссылка скопирована');
       window.setTimeout(() => setCopyState('idle'), 1800);
     } catch {
-      setStatusMessage('Не удалось скопировать ссылку');
+      return;
     }
   };
 
@@ -227,7 +214,6 @@ export function RoomPage() {
             isRevealed={isRevealed}
             allPlayersVoted={allPlayersVoted}
             anyPlayerVoted={anyPlayerVoted}
-            statusMessage={statusMessage}
             onReveal={handleReveal}
             onNextTask={handleClearTable}
             className="h-full min-h-14rem"
