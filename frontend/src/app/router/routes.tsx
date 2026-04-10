@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { AuthLayout } from '@/app/layouts';
 import { AuthGuard, PublicOnlyGuard } from '@/app/router/guards';
 import {
-  LandingPage,
+  HomePage,
   CreateRoomPage,
   LoginPage,
   RegisterPage,
@@ -17,7 +17,7 @@ export function AppRoutes() {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/" element={<HomePage />} />
       <Route path="/create-room" element={<CreateRoomPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/room/:roomId" element={<RoomPage />} />
