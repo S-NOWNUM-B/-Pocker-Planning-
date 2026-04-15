@@ -2,8 +2,9 @@
 
 # Poker Planning API
 
-**Технический справочник по REST API платформы**
+**Технический справочник по REST API и WebSocket платформы**
 
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![REST](https://img.shields.io/badge/REST-HTTP-2B5BA8)](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 [![WebSocket](https://img.shields.io/badge/WebSocket-Realtime-010101)](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 
@@ -14,7 +15,7 @@
 ## Содержание
 
 - [Базовые сведения](#базовые-сведения)
-- [Актуальная спецификация](#актуальная-спецификация)
+- [Источники истины](#источники-истины)
 - [Основные группы эндпоинтов](#основные-группы-эндпоинтов)
 - [WebSocket события](#websocket-события)
 - [Контракты ответов и ошибок](#контракты-ответов-и-ошибок)
@@ -36,22 +37,29 @@
 
 ---
 
-## Актуальная спецификация
+## Источники истины
 
-Источником истины для endpoint являются backend-контракты и их runtime-реализация.
-
-На текущем этапе backend подключается как внешний Python-сервис.
+Источником истины для endpoint являются backend-контракты и их runtime-реализация в `apps/backend/app/api/routes/`.
 
 <div align="center">
 
 | **Контракт**      | **Источник**                              |
 | :---------------- | :---------------------------------------- |
-| REST API          | `backend` (контроллеры/роуты)             |
-| WebSocket события | `backend` (WS handlers / event contracts) |
+| REST API          | `apps/backend/app/api/routes/` (FastAPI роуты) |
+| WebSocket события | `apps/backend/app/websocket/` (WS handlers) |
+| Pydantic схемы    | `apps/backend/app/schemas/` (DTO модели) |
 
 </div>
 
 Если есть расхождения между этим файлом и backend-контрактами, приоритет у backend.
+
+### Автоматическая документация
+
+FastAPI предоставляет встроенную документацию:
+
+- **Swagger UI**: `http://localhost:8000/docs`
+- **ReDoc**: `http://localhost:8000/redoc`
+- **OpenAPI JSON**: `http://localhost:8000/openapi.json`
 
 ---
 
@@ -59,13 +67,13 @@
 
 <div align="center">
 
-| **Группа**           | **Назначение**                                         |
-| :------------------- | :----------------------------------------------------- |
-| `auth`               | Регистрация, вход, выход, обновление токена            |
-| `rooms`              | Создание/удаление комнат, подключение/выход участников |
-| `votes`              | Отправка голосов, открытие и сброс результатов         |
-| `history` и `export` | История сессий и экспорт результатов                   |
-| `decks`              | Системные и кастомные колоды карт                      |
+| **Группа**           | **Файл**                                     | **Назначение**                                         |
+| :------------------- | :------------------------------------------- | :----------------------------------------------------- |
+| `auth`               | `app/api/routes/auth.py`                     | Регистрация, вход, JWT токены                          |
+| `rooms`              | `app/api/routes/rooms.py`                    | Создание/удаление комнат, подключение/выход участников |
+| `invitations`        | `app/api/routes/invitation_links.py`         | Ссылки-приглашения для подключения к комнатам          |
+| `voting`             | `app/api/routes/voting.py`                   | Раунды голосования, отправка голосов, результаты       |
+| `ws`                 | `app/api/routes/ws.py`                       | WebSocket для real-time синхронизации                  |
 
 </div>
 

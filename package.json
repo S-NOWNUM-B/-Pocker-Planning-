@@ -4,8 +4,10 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev",
+    "dev:frontend": "turbo run dev --filter=@poker/frontend",
     "build": "turbo run build",
+    "build:frontend": "turbo run build --filter=@poker/frontend",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix && pnpm format",
     "lint:eslint": "turbo run lint:eslint",

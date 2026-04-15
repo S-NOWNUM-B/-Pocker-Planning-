@@ -1,15 +1,25 @@
 # Dependencies
 node_modules/
-frontend/node_modules/
-backend/node_modules/
+apps/*/node_modules/
+packages/*/node_modules/
 
 # Build outputs
 dist/
-frontend/dist/
-backend/dist/
-build/
-frontend/build/
-backend/build/
+apps/*/dist/
+apps/*/build/
+packages/*/dist/
+packages/*/build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
 
 # Environment
 .env

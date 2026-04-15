@@ -8,6 +8,8 @@
 [![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite)](https://vite.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=node.js)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-336791?logo=postgresql)](https://www.postgresql.org/)
 
 </div>
 
@@ -19,6 +21,7 @@
 - [Технологический стек](#технологический-стек)
 - [Текущее состояние](#текущее-состояние)
 - [Архитектура](#архитектура)
+- [Структура монорепозитория](#структура-монорепозитория)
 - [Быстрый старт](#быстрый-старт)
 - [Команды](#команды)
 - [Форматирование и стили](#форматирование-и-стили)
@@ -45,6 +48,8 @@
 
 ## Технологический стек
 
+### Frontend
+
 <div align="center">
 
 |      **Категория**       |                                    **Технологии**                                     |        **Версия / Детали**         |
@@ -64,12 +69,34 @@
 
 </div>
 
+### Backend
+
+<div align="center">
+
+|     **Категория**      |                              **Технологии**                               |        **Версия**         |
+| :--------------------: | :-----------------------------------------------------------------------: | :--------------------------------: |
+|        Язык           |                  [Python](https://www.python.org/)                   |                 3.13+                 |
+|     HTTP-фреймворк     |              [FastAPI](https://fastapi.tiangolo.com/)              |       0.115.12       |
+|    ASGI-сервер    |        [Uvicorn](https://www.uvicorn.org/)        |        0.34.0         |
+|       ORM        |            [SQLAlchemy](https://www.sqlalchemy.org/)            |        2.0.40         |
+|    Миграции БД     |            [Alembic](https://alembic.sqlalchemy.org/)            |        1.15.2         |
+|        База данных        |                    [PostgreSQL](https://www.postgresql.org/docs/)                     |              16                 |
+|    Драйвер БД     |            [psycopg](https://www.psycopg.org/)            |        3.2.6         |
+|    Валидация схем     |            [Pydantic](https://docs.pydantic.dev/)            |        2.11.3         |
+|    Аутентификация       |                      [PyJWT](https://pyjwt.readthedocs.io/)                      |       2.10.1       |
+|    Хеширование паролей     |         [pwdlib](https://github.com/pwdlib/pwdlib) (argon2)          |        latest         |
+
+</div>
+
 ---
 
 ## Текущее состояние
 
-- Монорепозиторий настроен для `frontend` и `packages/shared`.
-- Backend в этом репозитории не подготавливается: будет подключён отдельный готовый Python-сервис.
+- Монорепозиторий настроен для `frontend` (TypeScript/React) и `packages/shared` (TypeScript).
+- Backend (`apps/backend`) — отдельный Python проект на FastAPI с собственным workflow.
+- Frontend: React 19 + Vite 6 + TypeScript + Tailwind CSS 4.
+- Backend: FastAPI 0.115 + SQLAlchemy 2.0 + Alembic + PostgreSQL 16.
+- Shared package: общие типы и утилиты для frontend.
 - Подготовлены общие конфиги качества кода: ESLint, Prettier, Stylelint, TypeScript base config, Turbo.
 
 ---
@@ -93,10 +120,10 @@ flowchart LR
         WS["WebSocket /\n(реальное время)"]
     end
 
-    subgraph BE["Backend API"]
-        REST["External Python API"]
-        WSEndpoint["External WebSocket Hub"]
-        Services["Будет подключён отдельно"]
+    subgraph BE["Backend (Node.js + TypeScript)"]
+        REST["REST API /\n(Express/Fastify)"]
+        WSEndpoint["WebSocket Server"]
+        Services["Business Logic"]
     end
 
     subgraph Storage["Хранилище"]
@@ -113,8 +140,50 @@ flowchart LR
     WS <--> WSEndpoint
     REST --> Services
     WSEndpoint --> Services
-    Services -. external .-> DB
-    Services -. external .-> Cache
+    Services --> DB
+    Services --> Cache
+```
+
+---
+
+## Структура монорепозитория
+
+```
+poker-planning/
+├── apps/
+│   ├── frontend/           # React frontend приложение (TypeScript)
+│   │   ├── src/
+│   │   ├── package.json
+│   │   └── ...
+│   └── backend/            # FastAPI backend сервис (Python)
+│       ├── app/
+│       │   ├── api/        # REST API routes
+│       │   ├── core/       # Config, security, dependencies
+│       │   ├── db/         # Database session, base models
+│       │   ├── models/     # SQLAlchemy ORM models
+│       │   ├── repositories/  # Data access layer
+│       │   ├── schemas/    # Pydantic DTO schemas
+│       │   ├── services/   # Business logic
+│       │   └── websocket/  # WebSocket manager
+│       ├── alembic/        # Database migrations
+│       ├── requirements.txt
+│       ├── Dockerfile
+│       └── docker-compose.yml
+├── packages/
+│   └── shared/             # Общие типы и утилиты (TypeScript)
+│       ├── src/
+│       ├── package.json
+│       └── tsconfig.json
+├── docs/                   # Документация проекта
+├── infrastructure/         # Docker, CI/CD, деплой
+├── package.json            # Root package.json (pnpm scripts)
+├── pnpm-workspace.yaml     # pnpm workspace конфигурация
+├── turbo.json              # Turbo monorepo конфигурация
+├── tsconfig.base.json      # Базовый TypeScript конфиг
+├── eslint.config.mjs       # ESLint конфигурация
+├── prettier.config.cjs     # Prettier конфигурация
+├── stylelint.config.cjs    # Stylelint конфигурация
+└── .editorconfig           # EditorConfig
 ```
 
 ---
@@ -155,8 +224,8 @@ pnpm dev
 ### Настройки по умолчанию
 
 - Frontend: `http://localhost:5173`
-- Backend API (будет внешним): `http://localhost:8000`
-- WebSocket (будет внешним): `ws://localhost:8000/ws`
+- Backend API: `http://localhost:3000`
+- WebSocket: `ws://localhost:3001`
 
 ---
 
@@ -165,11 +234,17 @@ pnpm dev
 ### Root (monorepo)
 
 ```bash
-# Запуск dev-задач во всех пакетах
+# Запуск dev-задач (только frontend, т.к. backend на Python)
 pnpm dev
+
+# Запуск только frontend
+pnpm dev:frontend
 
 # Сборка всех пакетов
 pnpm build
+
+# Сборка только frontend
+pnpm build:frontend
 
 # Линтинг всех пакетов
 pnpm lint
@@ -222,3 +297,30 @@ pnpm --filter @poker/frontend lint:style:fix
 pnpm --filter @poker/frontend format
 pnpm --filter @poker/frontend format:check
 ```
+
+### Backend (Python/FastAPI)
+
+Backend — отдельный Python проект. Перейдите в `apps/backend` и см. [README](apps/backend/README.md).
+
+```bash
+# Переход в папку backend
+cd apps/backend
+
+# Создание виртуального окружения
+python3 -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+
+# Установка зависимостей
+pip install -r requirements.txt
+
+# Запуск в режиме разработки
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+# Миграции БД
+alembic upgrade head
+
+# Запуск через Docker Compose
+docker compose up
+```
+
+Подробнее: [apps/backend/README.md](apps/backend/README.md)
