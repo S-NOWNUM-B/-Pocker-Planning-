@@ -18,9 +18,7 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
 /**
  * Register a new user
  */
-export async function register(
-  credentials: RegisterCredentials,
-): Promise<RegisterResponse> {
+export async function register(credentials: RegisterCredentials): Promise<RegisterResponse> {
   const { data } = await api.post<RegisterResponse>('/auth/register', credentials);
   return data;
 }

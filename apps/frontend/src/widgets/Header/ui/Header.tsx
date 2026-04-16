@@ -37,9 +37,16 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
             </>
           )}
 
-          <Button type="button" variant="outline" onClick={toggleTheme} className="h-10 rounded-xl px-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={toggleTheme}
+            className="h-10 rounded-xl px-3"
+          >
             {theme === 'dark' ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
-            <span className="hidden sm:inline">{theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}</span>
+            <span className="hidden sm:inline">
+              {theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+            </span>
           </Button>
         </div>
       </Card>

@@ -16,10 +16,7 @@ const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])/;
 const basePasswordSchema = z
   .string()
   .min(8, 'Пароль должен быть минимум 8 символов')
-  .regex(
-    passwordRegex,
-    'Пароль должен содержать буквы, цифры и спец символы (!@#$%^&*)',
-  );
+  .regex(passwordRegex, 'Пароль должен содержать буквы, цифры и спец символы (!@#$%^&*)');
 
 export const loginSchema = z.object({
   email: z.string().email('Некорректный email'),

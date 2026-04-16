@@ -22,6 +22,18 @@ import { Card } from '@/shared/ui/Card';
 import { useSession } from '@/app/providers';
 import { loginSchema, type LoginFormData } from '../validation';
 
+function getErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  if (typeof error === 'string' && error.trim().length > 0) {
+    return error;
+  }
+
+  return fallback;
+}
+
 export function LoginForm() {
   const navigate = useNavigate();
   const { login } = useSession();
@@ -42,8 +54,8 @@ export function LoginForm() {
       setIsLoading(true);
       await login(data as Required<LoginFormData>);
       navigate('/dashboard');
-    } catch (error: any) {
-      let message = error?.message || 'Ошибка при входе. Проверьте email и пароль.';
+    } catch (error: unknown) {
+      let message = getErrorMessage(error, 'Ошибка при входе. Проверьте email и пароль.');
       if (message === 'Network Error' || message.includes('ERR_CONNECTION')) {
         message = 'Ошибка соединения. Убедитесь, что сервер запущен и доступен.';
       }

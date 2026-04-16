@@ -28,12 +28,12 @@ Backend работает как полноценный Python-сервис на 
 
 <div align="center">
 
-| **Домен**      | **Технология**                  | **Назначение**                                       |
-| :------------- | :------------------------------ | :--------------------------------------------------- |
-| Frontend       | React 19 + Vite 6 + TypeScript  | UI и пользовательские сценарии                       |
-| Backend        | FastAPI 0.115 + Python 3.13     | API, бизнес-логика, синхронизация в реальном времени |
-| База данных    | PostgreSQL 16 + SQLAlchemy 2.0  | Хранение данных, ORM                                 |
-| Миграции       | Alembic 1.15                    | Управление схемой БД                                 |
+| **Домен**   | **Технология**                 | **Назначение**                                       |
+| :---------- | :----------------------------- | :--------------------------------------------------- |
+| Frontend    | React 19 + Vite 6 + TypeScript | UI и пользовательские сценарии                       |
+| Backend     | FastAPI 0.115 + Python 3.13    | API, бизнес-логика, синхронизация в реальном времени |
+| База данных | PostgreSQL 16 + SQLAlchemy 2.0 | Хранение данных, ORM                                 |
+| Миграции    | Alembic 1.15                   | Управление схемой БД                                 |
 
 </div>
 
@@ -62,16 +62,16 @@ Backend работает как полноценный Python-сервис на 
 
 <div align="center">
 
-| **Слой**         | **Папка**                        | **Назначение**                                                 |
-| :--------------- | :------------------------------- | :------------------------------------------------------------- |
-| API Routes       | `app/api/routes/`                | REST-контроллеры, контракты запросов/ответов, обработка ошибок |
-| Services         | `app/services/`                  | Бизнес-правила комнат, раундов и голосования                   |
-| Repositories     | `app/repositories/`              | Слой доступа к данным (SQLAlchemy queries)                     |
-| WebSocket        | `app/websocket/`                 | WebSocket события, broadcast состояния комнаты                 |
-| Core             | `app/core/`                      | Конфигурация, security, зависимости FastAPI                    |
-| Schemas          | `app/schemas/`                   | Pydantic модели (DTO) для валидации данных                     |
-| Models           | `app/models/`                    | SQLAlchemy ORM модели                                          |
-| Database         | `app/db/`                        | Сессия и базовая модель ORM                                    |
+| **Слой**     | **Папка**           | **Назначение**                                                 |
+| :----------- | :------------------ | :------------------------------------------------------------- |
+| API Routes   | `app/api/routes/`   | REST-контроллеры, контракты запросов/ответов, обработка ошибок |
+| Services     | `app/services/`     | Бизнес-правила комнат, раундов и голосования                   |
+| Repositories | `app/repositories/` | Слой доступа к данным (SQLAlchemy queries)                     |
+| WebSocket    | `app/websocket/`    | WebSocket события, broadcast состояния комнаты                 |
+| Core         | `app/core/`         | Конфигурация, security, зависимости FastAPI                    |
+| Schemas      | `app/schemas/`      | Pydantic модели (DTO) для валидации данных                     |
+| Models       | `app/models/`       | SQLAlchemy ORM модели                                          |
+| Database     | `app/db/`           | Сессия и базовая модель ORM                                    |
 
 </div>
 
@@ -114,15 +114,15 @@ apps/backend/app/
 
 <div align="center">
 
-| **Категория**  | **Frontend технология**    | **Backend технология**      | **Назначение**                       |
-| :------------- | :------------------------- | :------------------------- | :----------------------------------- |
-| HTTP-запросы   | Axios + TanStack Query     | FastAPI REST               | API запросы, кэширование             |
-| Реальное время | WebSocket (браузерный API) | FastAPI WebSocket endpoint | Голосование, синхронизация           |
-| Валидация      | Zod + React Hook Form      | Pydantic v2                | Формы, схемы данных                  |
-| Анимации       | Framer Motion              | —                          | Анимации карт, переходы              |
-| Иконки         | Lucide React               | —                          | UI-элементы                          |
-| База данных    | —                          | SQLAlchemy 2.0 + Alembic   | ORM, миграции PostgreSQL             |
-| Аутентификация | LocalStorage (JWT)         | PyJWT + pwdlib (argon2)    | Токены, хеширование паролей          |
+| **Категория**  | **Frontend технология**    | **Backend технология**     | **Назначение**              |
+| :------------- | :------------------------- | :------------------------- | :-------------------------- |
+| HTTP-запросы   | Axios + TanStack Query     | FastAPI REST               | API запросы, кэширование    |
+| Реальное время | WebSocket (браузерный API) | FastAPI WebSocket endpoint | Голосование, синхронизация  |
+| Валидация      | Zod + React Hook Form      | Pydantic v2                | Формы, схемы данных         |
+| Анимации       | Framer Motion              | —                          | Анимации карт, переходы     |
+| Иконки         | Lucide React               | —                          | UI-элементы                 |
+| База данных    | —                          | SQLAlchemy 2.0 + Alembic   | ORM, миграции PostgreSQL    |
+| Аутентификация | LocalStorage (JWT)         | PyJWT + pwdlib (argon2)    | Токены, хеширование паролей |
 
 </div>
 

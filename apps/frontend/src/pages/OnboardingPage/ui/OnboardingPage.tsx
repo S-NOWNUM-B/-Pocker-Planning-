@@ -14,15 +14,23 @@ export function OnboardingPage() {
   return (
     <div className="mx-auto min-h-screen w-full max-w-300 p-4 md:p-8">
       <section className="py-16 text-center">
-        <h1 className="mb-4 text-[2rem] font-bold text-foreground md:text-[3rem]">Poker Planning</h1>
+        <h1 className="mb-4 text-[2rem] font-bold text-foreground md:text-[3rem]">
+          Poker Planning
+        </h1>
         <p className="mx-auto max-w-150 text-base text-muted-foreground md:text-xl">
           Инструмент для оценки задач в Agile-командах с помощью Planning Poker
         </p>
         <div>
-          <Link to="/create-room" className="mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 font-medium text-white transition-all hover:-translate-y-0.5 active:translate-y-0">
+          <Link
+            to="/create-room"
+            className="mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 font-medium text-white transition-all hover:-translate-y-0.5 active:translate-y-0"
+          >
             Быстрый старт
           </Link>
-          <Link to="/about" className="mt-8 ml-4 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-secondary px-6 font-medium text-foreground transition-all hover:-translate-y-0.5 active:translate-y-0">
+          <Link
+            to="/about"
+            className="mt-8 ml-4 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-secondary px-6 font-medium text-foreground transition-all hover:-translate-y-0.5 active:translate-y-0"
+          >
             Узнать больше
           </Link>
         </div>
@@ -34,29 +42,28 @@ export function OnboardingPage() {
           <div className="rounded-xl border border-border bg-secondary p-6">
             <h3 className="mb-3 text-xl text-foreground">Совместная оценка</h3>
             <p className="leading-relaxed text-muted-foreground">
-              Вся команда оценивает задачи одновременно, что устраняет предвзятость
-              и даёт более точные оценки.
+              Вся команда оценивает задачи одновременно, что устраняет предвзятость и даёт более
+              точные оценки.
             </p>
           </div>
           <div className="rounded-xl border border-border bg-secondary p-6">
             <h3 className="mb-3 text-xl text-foreground">В реальном времени</h3>
             <p className="leading-relaxed text-muted-foreground">
-              WebSocket-соединение обеспечивает мгновенную синхронизацию голосов
-              между всеми участниками.
+              WebSocket-соединение обеспечивает мгновенную синхронизацию голосов между всеми
+              участниками.
             </p>
           </div>
           <div className="rounded-xl border border-border bg-secondary p-6">
             <h3 className="mb-3 text-xl text-foreground">Гибкие колоды</h3>
             <p className="leading-relaxed text-muted-foreground">
-              Поддержка классической последовательности Фибоначчи, T-shirt размеров
-              и пользовательских колод.
+              Поддержка классической последовательности Фибоначчи, T-shirt размеров и
+              пользовательских колод.
             </p>
           </div>
           <div className="rounded-xl border border-border bg-secondary p-6">
             <h3 className="mb-3 text-xl text-foreground">История сессий</h3>
             <p className="leading-relaxed text-muted-foreground">
-              Все результаты сохраняются и доступны для анализа и экспорта
-              в любое время.
+              Все результаты сохраняются и доступны для анализа и экспорта в любое время.
             </p>
           </div>
         </div>
@@ -77,13 +84,17 @@ export function OnboardingPage() {
             <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-white">
               2
             </span>
-            <p className="leading-relaxed text-muted-foreground">Обсудите задачу и выберите карту с оценкой</p>
+            <p className="leading-relaxed text-muted-foreground">
+              Обсудите задачу и выберите карту с оценкой
+            </p>
           </div>
           <div className="max-w-75 min-w-50 flex-1 text-center">
             <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-white">
               3
             </span>
-            <p className="leading-relaxed text-muted-foreground">Откройте результаты и обсудите расхождения</p>
+            <p className="leading-relaxed text-muted-foreground">
+              Откройте результаты и обсудите расхождения
+            </p>
           </div>
         </div>
       </section>

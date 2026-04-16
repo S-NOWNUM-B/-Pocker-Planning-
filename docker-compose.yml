@@ -8,11 +8,11 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: planning_poker
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,12 +35,12 @@ services:
       ACCESS_TOKEN_EXPIRE_MINUTES: 10080
       FRONTEND_URL: http://localhost
       CORS_ORIGINS: http://localhost,http://127.0.0.1,http://localhost:5173,http://127.0.0.1:5173
-      SEED_DEMO_DATA: "true"
+      SEED_DEMO_DATA: 'true'
       DEMO_USER_PASSWORD: DemoPass123!
       ENVIRONMENT: docker
-      APP_NAME: "Покер-планирование"
+      APP_NAME: 'Покер-планирование'
     ports:
-      - "8000:8000"
+      - '8000:8000'
     volumes:
       - ./apps/backend:/app
     networks:
@@ -56,7 +56,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "80:80"
+      - '80:80'
     volumes:
       - ./apps/frontend/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:

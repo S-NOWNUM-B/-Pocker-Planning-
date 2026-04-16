@@ -74,18 +74,18 @@
 
 <div align="center">
 
-|     **Категория**      |                              **Технологии**                               |        **Версия**         |
-| :--------------------: | :-----------------------------------------------------------------------: | :--------------------------------: |
-|        Язык           |                  [Python](https://www.python.org/)                   |                 3.13+                 |
-|     HTTP-фреймворк     |              [FastAPI](https://fastapi.tiangolo.com/)              |       0.115.12       |
-|    ASGI-сервер    |        [Uvicorn](https://www.uvicorn.org/)        |        0.34.0         |
-|       ORM        |            [SQLAlchemy](https://www.sqlalchemy.org/)            |        2.0.40         |
-|    Миграции БД     |            [Alembic](https://alembic.sqlalchemy.org/)            |        1.15.2         |
-|        База данных        |                    [PostgreSQL](https://www.postgresql.org/docs/)                     |              16                 |
-|    Драйвер БД     |            [psycopg](https://www.psycopg.org/)            |        3.2.6         |
-|    Валидация схем     |            [Pydantic](https://docs.pydantic.dev/)            |        2.11.3         |
-|    Аутентификация       |                      [PyJWT](https://pyjwt.readthedocs.io/)                      |       2.10.1       |
-|    Хеширование паролей     |         [pwdlib](https://github.com/pwdlib/pwdlib) (argon2)          |        latest         |
+|    **Категория**    |                   **Технологии**                    | **Версия** |
+| :-----------------: | :-------------------------------------------------: | :--------: |
+|        Язык         |          [Python](https://www.python.org/)          |   3.13+    |
+|   HTTP-фреймворк    |      [FastAPI](https://fastapi.tiangolo.com/)       |  0.115.12  |
+|     ASGI-сервер     |         [Uvicorn](https://www.uvicorn.org/)         |   0.34.0   |
+|         ORM         |      [SQLAlchemy](https://www.sqlalchemy.org/)      |   2.0.40   |
+|     Миграции БД     |     [Alembic](https://alembic.sqlalchemy.org/)      |   1.15.2   |
+|     База данных     |   [PostgreSQL](https://www.postgresql.org/docs/)    |     16     |
+|     Драйвер БД      |         [psycopg](https://www.psycopg.org/)         |   3.2.6    |
+|   Валидация схем    |       [Pydantic](https://docs.pydantic.dev/)        |   2.11.3   |
+|   Аутентификация    |       [PyJWT](https://pyjwt.readthedocs.io/)        |   2.10.1   |
+| Хеширование паролей | [pwdlib](https://github.com/pwdlib/pwdlib) (argon2) |   latest   |
 
 </div>
 

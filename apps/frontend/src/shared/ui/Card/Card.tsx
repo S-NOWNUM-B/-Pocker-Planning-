@@ -23,7 +23,10 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Card({ className = '', variant = 'default', children, ...props }: CardProps) {
   return (
-    <div className={`rounded-xl p-5 text-card-foreground ${variantClasses[variant]} ${className}`} {...props}>
+    <div
+      className={`rounded-xl p-5 text-card-foreground ${variantClasses[variant]} ${className}`}
+      {...props}
+    >
       {children}
     </div>
   );

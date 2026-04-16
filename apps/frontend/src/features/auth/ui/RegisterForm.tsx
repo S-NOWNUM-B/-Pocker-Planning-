@@ -26,6 +26,18 @@ import { useSession } from '@/app/providers';
 import { PasswordInput } from './PasswordInput';
 import { registerSchema, type RegisterFormData } from '../validation';
 
+function getErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  if (typeof error === 'string' && error.trim().length > 0) {
+    return error;
+  }
+
+  return fallback;
+}
+
 export function RegisterForm() {
   const navigate = useNavigate();
   const { register: registerUser } = useSession();
@@ -54,9 +66,11 @@ export function RegisterForm() {
         password: data.password,
       });
       navigate('/dashboard');
-    } catch (error: any) {
-      let message =
-        error?.message || 'Ошибка при регистрации. Возможно, этот email уже зарегистрирован.';
+    } catch (error: unknown) {
+      let message = getErrorMessage(
+        error,
+        'Ошибка при регистрации. Возможно, этот email уже зарегистрирован.',
+      );
       if (message === 'Network Error' || message.includes('ERR_CONNECTION')) {
         message = 'Ошибка соединения. Убедитесь, что сервер запущен и доступен.';
       }

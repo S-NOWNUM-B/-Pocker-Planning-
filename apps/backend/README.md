@@ -44,20 +44,20 @@ Backend-сервис для приложения Poker Planning обеспечи
 
 <div align="center">
 
-|     **Категория**      |                          **Технологии**                           |     **Версия**     |
-| :--------------------: | :---------------------------------------------------------------: | :----------------: |
-|     Язык / Рантайм     |                    [Python](https://www.python.org/)                      |       3.13+        |
-|    HTTP-фреймворк     |                  [FastAPI](https://fastapi.tiangolo.com/)                   |      0.115.12      |
-|    ASGI-сервер    |                    [Uvicorn](https://www.uvicorn.org/)                    |      0.34.0      |
-|       ORM        |                [SQLAlchemy](https://www.sqlalchemy.org/)                |      2.0.40      |
-|    Миграции БД     |                   [Alembic](https://alembic.sqlalchemy.org/)                    |      1.15.2      |
-|     База данных     |              [PostgreSQL](https://www.postgresql.org/)              |        16+         |
-|    Драйвер БД     |                  [psycopg](https://www.psycopg.org/)                  |      3.2.6       |
-|    Валидация схем     |                    [Pydantic](https://docs.pydantic.dev/)                     |      2.11.3      |
-|    Настройки     |              [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)              |      2.8.1       |
-|    Аутентификация     |                    [PyJWT](https://pyjwt.readthedocs.io/)                     |      2.10.1      |
-|    Хеширование паролей     |              [pwdlib](https://github.com/pwdlib/pwdlib) (argon2)              |       latest       |
-|    Валидация email     |              [email-validator](https://github.com/JoshData/python-email-validator)              |      2.2.0       |
+|    **Категория**    |                                  **Технологии**                                   | **Версия** |
+| :-----------------: | :-------------------------------------------------------------------------------: | :--------: |
+|   Язык / Рантайм    |                         [Python](https://www.python.org/)                         |   3.13+    |
+|   HTTP-фреймворк    |                     [FastAPI](https://fastapi.tiangolo.com/)                      |  0.115.12  |
+|     ASGI-сервер     |                        [Uvicorn](https://www.uvicorn.org/)                        |   0.34.0   |
+|         ORM         |                     [SQLAlchemy](https://www.sqlalchemy.org/)                     |   2.0.40   |
+|     Миграции БД     |                    [Alembic](https://alembic.sqlalchemy.org/)                     |   1.15.2   |
+|     База данных     |                     [PostgreSQL](https://www.postgresql.org/)                     |    16+     |
+|     Драйвер БД      |                        [psycopg](https://www.psycopg.org/)                        |   3.2.6    |
+|   Валидация схем    |                      [Pydantic](https://docs.pydantic.dev/)                       |   2.11.3   |
+|      Настройки      | [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) |   2.8.1    |
+|   Аутентификация    |                      [PyJWT](https://pyjwt.readthedocs.io/)                       |   2.10.1   |
+| Хеширование паролей |                [pwdlib](https://github.com/pwdlib/pwdlib) (argon2)                |   latest   |
+|   Валидация email   |       [email-validator](https://github.com/JoshData/python-email-validator)       |   2.2.0    |
 
 </div>
 
@@ -102,12 +102,12 @@ flowchart TD
 
 <div align="center">
 
-| Компонент | Минимум | Рекомендуется |
-| :-------: | :-----: | :-----------: |
-|  Python   |  3.11   |     3.13+     |
-| PostgreSQL |   14    |      16       |
-|   pip    |   22+    |      24+      |
-|  Docker (опционально)  |   20+    |      24+      |
+|      Компонент       | Минимум | Рекомендуется |
+| :------------------: | :-----: | :-----------: |
+|        Python        |  3.11   |     3.13+     |
+|      PostgreSQL      |   14    |      16       |
+|         pip          |   22+   |      24+      |
+| Docker (опционально) |   20+   |      24+      |
 
 </div>
 
@@ -259,45 +259,45 @@ docker compose down -v
 
 ### REST API endpoints
 
-| Метод | Endpoint | Описание | Auth |
-| :--- | :--- | :--- | :---: |
-| `POST` | `/api/v1/auth/register` | Регистрация пользователя | ❌ |
-| `POST` | `/api/v1/auth/login` | Вход и получение токена | ❌ |
-| `POST` | `/api/v1/rooms` | Создание комнаты | ✅ |
-| `GET` | `/api/v1/rooms/:id` | Получение информации о комнате | ✅ |
-| `GET` | `/api/v1/rooms/:id/participants` | Список участников | ✅ |
-| `POST` | `/api/v1/rooms/:id/join` | Присоединение к комнате | ✅ |
-| `POST` | `/api/v1/invitations` | Создание ссылки-приглашения | ✅ |
-| `POST` | `/api/v1/voting/rounds` | Создание раунда голосования | ✅ |
-| `POST` | `/api/v1/voting/rounds/:id/votes` | Голосование | ✅ |
-| `GET` | `/api/v1/voting/rounds/:id/results` | Результаты голосования | ✅ |
-| `POST` | `/api/v1/voting/rounds/:id/reveal` | Раскрытие карт | ✅ |
-| `POST` | `/api/v1/voting/rounds/:id/reset` | Сброс голосования | ✅ |
-| `GET` | `/health` | Health check | ❌ |
+| Метод  | Endpoint                            | Описание                       | Auth |
+| :----- | :---------------------------------- | :----------------------------- | :--: |
+| `POST` | `/api/v1/auth/register`             | Регистрация пользователя       |  ❌  |
+| `POST` | `/api/v1/auth/login`                | Вход и получение токена        |  ❌  |
+| `POST` | `/api/v1/rooms`                     | Создание комнаты               |  ✅  |
+| `GET`  | `/api/v1/rooms/:id`                 | Получение информации о комнате |  ✅  |
+| `GET`  | `/api/v1/rooms/:id/participants`    | Список участников              |  ✅  |
+| `POST` | `/api/v1/rooms/:id/join`            | Присоединение к комнате        |  ✅  |
+| `POST` | `/api/v1/invitations`               | Создание ссылки-приглашения    |  ✅  |
+| `POST` | `/api/v1/voting/rounds`             | Создание раунда голосования    |  ✅  |
+| `POST` | `/api/v1/voting/rounds/:id/votes`   | Голосование                    |  ✅  |
+| `GET`  | `/api/v1/voting/rounds/:id/results` | Результаты голосования         |  ✅  |
+| `POST` | `/api/v1/voting/rounds/:id/reveal`  | Раскрытие карт                 |  ✅  |
+| `POST` | `/api/v1/voting/rounds/:id/reset`   | Сброс голосования              |  ✅  |
+| `GET`  | `/health`                           | Health check                   |  ❌  |
 
 ### WebSocket события
 
 #### Client → Server
 
-| Событие | Payload | Описание |
-| :--- | :--- | :--- |
-| `join_room` | `{ roomId, userId }` | Присоединение к комнате |
-| `leave_room` | `{ roomId, userId }` | Выход из комнаты |
-| `vote` | `{ roomId, userId, cardValue }` | Голосование картой |
-| `request_reveal` | `{ roomId }` | Запрос раскрытия карт |
-| `request_reset` | `{ roomId }` | Запрос сброса голосования |
+| Событие          | Payload                         | Описание                  |
+| :--------------- | :------------------------------ | :------------------------ |
+| `join_room`      | `{ roomId, userId }`            | Присоединение к комнате   |
+| `leave_room`     | `{ roomId, userId }`            | Выход из комнаты          |
+| `vote`           | `{ roomId, userId, cardValue }` | Голосование картой        |
+| `request_reveal` | `{ roomId }`                    | Запрос раскрытия карт     |
+| `request_reset`  | `{ roomId }`                    | Запрос сброса голосования |
 
 #### Server → Client
 
-| Событие | Payload | Описание |
-| :--- | :--- | :--- |
-| `room_state` | `{ roomId, participants, status }` | Текущее состояние комнаты |
-| `vote_update` | `{ userId, hasVoted }` | Обновление статуса голоса |
-| `votes_revealed` | `{ participants, average, consensus }` | Результаты голосования |
-| `room_reset` | `{ roomId }` | Сброс комнаты |
-| `participant_joined` | `{ participant }` | Новый участник |
-| `participant_left` | `{ userId }` | Участник вышел |
-| `error` | `{ message, code }` | Ошибка |
+| Событие              | Payload                                | Описание                  |
+| :------------------- | :------------------------------------- | :------------------------ |
+| `room_state`         | `{ roomId, participants, status }`     | Текущее состояние комнаты |
+| `vote_update`        | `{ userId, hasVoted }`                 | Обновление статуса голоса |
+| `votes_revealed`     | `{ participants, average, consensus }` | Результаты голосования    |
+| `room_reset`         | `{ roomId }`                           | Сброс комнаты             |
+| `participant_joined` | `{ participant }`                      | Новый участник            |
+| `participant_left`   | `{ userId }`                           | Участник вышел            |
+| `error`              | `{ message, code }`                    | Ошибка                    |
 
 ---
 
@@ -305,19 +305,19 @@ docker compose down -v
 
 ### Переменные окружения
 
-| Переменная | Описание | По умолчанию | Обязательная |
-| :--- | :--- | :--- | :---: |
-| `APP_NAME` | Название приложения | `Покер-планирование` | ❌ |
-| `ENVIRONMENT` | Окружение (development/production) | `development` | ❌ |
-| `API_V1_PREFIX` | Префикс API v1 | `/api/v1` | ❌ |
-| `DATABASE_URL` | Строка подключения к PostgreSQL | — | ✅ |
-| `JWT_SECRET_KEY` | Секретный ключ для JWT | `change-me` | ✅ |
-| `JWT_ALGORITHM` | Алгоритм JWT | `HS256` | ❌ |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | Время жизни токена (минуты) | `10080` (7 дней) | ❌ |
-| `FRONTEND_URL` | URL frontend для CORS | `http://localhost:3000` | ❌ |
-| `CORS_ORIGINS` | Разрешённые origins (через запятую) | `http://localhost:3000` | ❌ |
-| `SEED_DEMO_DATA` | Заполнить демо-данными | `false` | ❌ |
-| `DEMO_USER_PASSWORD` | Пароль для демо-пользователя | `DemoPass123!` | ❌ |
+| Переменная                    | Описание                            | По умолчанию            | Обязательная |
+| :---------------------------- | :---------------------------------- | :---------------------- | :----------: |
+| `APP_NAME`                    | Название приложения                 | `Покер-планирование`    |      ❌      |
+| `ENVIRONMENT`                 | Окружение (development/production)  | `development`           |      ❌      |
+| `API_V1_PREFIX`               | Префикс API v1                      | `/api/v1`               |      ❌      |
+| `DATABASE_URL`                | Строка подключения к PostgreSQL     | —                       |      ✅      |
+| `JWT_SECRET_KEY`              | Секретный ключ для JWT              | `change-me`             |      ✅      |
+| `JWT_ALGORITHM`               | Алгоритм JWT                        | `HS256`                 |      ❌      |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | Время жизни токена (минуты)         | `10080` (7 дней)        |      ❌      |
+| `FRONTEND_URL`                | URL frontend для CORS               | `http://localhost:3000` |      ❌      |
+| `CORS_ORIGINS`                | Разрешённые origins (через запятую) | `http://localhost:3000` |      ❌      |
+| `SEED_DEMO_DATA`              | Заполнить демо-данными              | `false`                 |      ❌      |
+| `DEMO_USER_PASSWORD`          | Пароль для демо-пользователя        | `DemoPass123!`          |      ❌      |
 
 ### Пример .env
 

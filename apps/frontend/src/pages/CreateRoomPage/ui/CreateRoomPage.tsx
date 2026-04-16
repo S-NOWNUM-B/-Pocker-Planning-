@@ -45,7 +45,7 @@ export function CreateRoomPage() {
       roomId: createRoomId(roomName),
       roomName: roomName.trim(),
       userName: userName.trim(),
-      deckType
+      deckType,
     };
 
     window.localStorage.setItem('poker-planning:session', JSON.stringify(session));

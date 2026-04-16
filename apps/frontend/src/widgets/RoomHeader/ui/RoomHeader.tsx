@@ -64,9 +64,16 @@ export function RoomHeader({ roomName, roomId, deckName }: RoomHeaderProps) {
         </div>
 
         <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2">
-          <Button type="button" variant="outline" onClick={handleCopyLink} className="h-10 rounded-xl px-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleCopyLink}
+            className="h-10 rounded-xl px-3"
+          >
             <LinkIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">{copyState === 'copied' ? 'Скопировано' : 'Пригласить'}</span>
+            <span className="hidden sm:inline">
+              {copyState === 'copied' ? 'Скопировано' : 'Пригласить'}
+            </span>
           </Button>
           <Button
             type="button"
@@ -77,9 +84,16 @@ export function RoomHeader({ roomName, roomId, deckName }: RoomHeaderProps) {
             <LogOutIcon className="h-4 w-4" />
             <span className="hidden sm:inline">Выйти</span>
           </Button>
-          <Button type="button" variant="outline" onClick={toggleTheme} className="h-10 rounded-xl px-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={toggleTheme}
+            className="h-10 rounded-xl px-3"
+          >
             {theme === 'dark' ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
-            <span className="hidden sm:inline">{theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}</span>
+            <span className="hidden sm:inline">
+              {theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+            </span>
           </Button>
         </div>
       </Card>

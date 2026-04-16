@@ -43,11 +43,11 @@
 
 <div align="center">
 
-| **Контракт**      | **Источник**                              |
-| :---------------- | :---------------------------------------- |
+| **Контракт**      | **Источник**                                   |
+| :---------------- | :--------------------------------------------- |
 | REST API          | `apps/backend/app/api/routes/` (FastAPI роуты) |
-| WebSocket события | `apps/backend/app/websocket/` (WS handlers) |
-| Pydantic схемы    | `apps/backend/app/schemas/` (DTO модели) |
+| WebSocket события | `apps/backend/app/websocket/` (WS handlers)    |
+| Pydantic схемы    | `apps/backend/app/schemas/` (DTO модели)       |
 
 </div>
 
@@ -67,13 +67,13 @@ FastAPI предоставляет встроенную документацию
 
 <div align="center">
 
-| **Группа**           | **Файл**                                     | **Назначение**                                         |
-| :------------------- | :------------------------------------------- | :----------------------------------------------------- |
-| `auth`               | `app/api/routes/auth.py`                     | Регистрация, вход, JWT токены                          |
-| `rooms`              | `app/api/routes/rooms.py`                    | Создание/удаление комнат, подключение/выход участников |
-| `invitations`        | `app/api/routes/invitation_links.py`         | Ссылки-приглашения для подключения к комнатам          |
-| `voting`             | `app/api/routes/voting.py`                   | Раунды голосования, отправка голосов, результаты       |
-| `ws`                 | `app/api/routes/ws.py`                       | WebSocket для real-time синхронизации                  |
+| **Группа**    | **Файл**                             | **Назначение**                                         |
+| :------------ | :----------------------------------- | :----------------------------------------------------- |
+| `auth`        | `app/api/routes/auth.py`             | Регистрация, вход, JWT токены                          |
+| `rooms`       | `app/api/routes/rooms.py`            | Создание/удаление комнат, подключение/выход участников |
+| `invitations` | `app/api/routes/invitation_links.py` | Ссылки-приглашения для подключения к комнатам          |
+| `voting`      | `app/api/routes/voting.py`           | Раунды голосования, отправка голосов, результаты       |
+| `ws`          | `app/api/routes/ws.py`               | WebSocket для real-time синхронизации                  |
 
 </div>
 

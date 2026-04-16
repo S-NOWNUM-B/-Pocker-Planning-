@@ -16,7 +16,8 @@ import { type ButtonHTMLAttributes, forwardRef } from 'react';
 export const variantClasses = {
   primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
   secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-  outline: 'border border-border bg-card/70 text-foreground hover:border-primary/55 hover:bg-secondary/60',
+  outline:
+    'border border-border bg-card/70 text-foreground hover:border-primary/55 hover:bg-secondary/60',
   card: 'aspect-[3/4] border border-border bg-card text-card-foreground text-xl hover:border-primary/55 hover:bg-card/90',
   ghost: 'bg-transparent text-foreground/85 hover:bg-secondary/60',
 };

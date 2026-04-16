@@ -7,7 +7,12 @@ interface RoomFooterProps {
   onSelectCard: (card: string) => void;
 }
 
-export function RoomFooter({ cards, selectedCard, disabled = false, onSelectCard }: RoomFooterProps) {
+export function RoomFooter({
+  cards,
+  selectedCard,
+  disabled = false,
+  onSelectCard,
+}: RoomFooterProps) {
   return (
     <footer>
       <VotingCards
