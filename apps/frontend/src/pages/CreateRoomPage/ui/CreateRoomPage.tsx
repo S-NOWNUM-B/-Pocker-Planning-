@@ -134,7 +134,7 @@ export function CreateRoomPage() {
                         key={deckKey}
                         type="button"
                         onClick={() => setDeckType(deckKey)}
-                        className={`rounded-2xl border p-4 text-left transition ${
+                        className={`rounded-2xl border p-4 text-left ${
                           selected
                             ? 'border-primary bg-primary/10 shadow-sm'
                             : 'border-border bg-secondary/40 hover:border-primary/50'

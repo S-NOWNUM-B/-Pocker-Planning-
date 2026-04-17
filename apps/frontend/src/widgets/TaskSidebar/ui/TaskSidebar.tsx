@@ -71,7 +71,7 @@ export function TaskSidebar({
                 key={task.id}
                 type="button"
                 onClick={() => !isRevealed && onSelectTask(task.id)}
-                className={`w-full rounded-2xl border p-3 text-left transition ${
+                className={`w-full rounded-2xl border p-3 text-left ${
                   isActive
                     ? 'border-primary/70 bg-primary/12 shadow-sm'
                     : task.estimate

@@ -29,7 +29,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={inputId}
-          className="rounded-lg border border-input bg-input px-3.5 py-2.5 text-base text-foreground transition-colors placeholder:text-muted-foreground/80 focus:border-primary/65 focus:outline-none"
+          className="rounded-lg border border-input bg-input px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/80 focus:border-primary/65 focus:outline-none"
           {...props}
         />
         {error && <span className="text-xs text-destructive">{error}</span>}

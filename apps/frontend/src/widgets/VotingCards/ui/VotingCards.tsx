@@ -52,7 +52,7 @@ export function VotingCards({
               disabled={disabled}
               onClick={() => onSelectCard(card)}
               variant={selectedCard === card ? 'primary' : 'outline'}
-              className="flex h-12 w-10 rounded-lg text-sm font-black shadow-sm transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:w-11 sm:text-base"
+              className="flex h-12 w-10 rounded-lg text-sm font-black shadow-sm disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:w-11 sm:text-base"
             >
               {card === '☕' ? (
                 <span

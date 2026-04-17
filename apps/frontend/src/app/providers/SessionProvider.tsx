@@ -12,8 +12,9 @@
  */
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '@/entities/user';
-import { login as apiLogin, register as apiRegister, getUser as apiGetUser } from '@/entities/user';
+import { login as apiLogin, getUser as apiGetUser } from '@/entities/user';
 import type { LoginCredentials, RegisterCredentials } from '@/entities/user';
+import { SessionManager } from '@/shared/lib/session';
 
 export interface SessionContextValue {
   user: User | null;
@@ -83,10 +84,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     setUser(response.user);
   };
 
-  const handleRegister = async (credentials: RegisterCredentials) => {
-    const response = await apiRegister(credentials);
-    SessionManager.saveSession(response.access_token, response.user);
-    setUser(response.user);
+  const handleRegister = async (_credentials: RegisterCredentials) => {
+    throw new Error('Регистрация временно отключена. Реализуйте вручную.');
   };
 
   const handleLogout = () => {

@@ -19,14 +19,14 @@ export function Footer() {
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <p>© {currentYear} Pocker Planning</p>
         <div className="flex items-center gap-4">
-          <Link to="/about" className="transition-colors hover:text-foreground">
+          <Link to="/about" className="hover:text-foreground">
             О проекте
           </Link>
           <a
             href="https://github.com"
             target="_blank"
             rel="noreferrer"
-            className="transition-colors hover:text-foreground"
+            className="hover:text-foreground"
           >
             GitHub
           </a>

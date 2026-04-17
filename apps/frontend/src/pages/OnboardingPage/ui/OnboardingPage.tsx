@@ -23,13 +23,13 @@ export function OnboardingPage() {
         <div>
           <Link
             to="/create-room"
-            className="mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 font-medium text-white transition-all hover:-translate-y-0.5 active:translate-y-0"
+            className="mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 font-medium text-white"
           >
             Быстрый старт
           </Link>
           <Link
             to="/about"
-            className="mt-8 ml-4 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-secondary px-6 font-medium text-foreground transition-all hover:-translate-y-0.5 active:translate-y-0"
+            className="mt-8 ml-4 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-secondary px-6 font-medium text-foreground"
           >
             Узнать больше
           </Link>

@@ -18,9 +18,8 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
 /**
  * Register a new user
  */
-export async function register(credentials: RegisterCredentials): Promise<RegisterResponse> {
-  const { data } = await api.post<RegisterResponse>('/auth/register', credentials);
-  return data;
+export async function register(_credentials: RegisterCredentials): Promise<RegisterResponse> {
+  throw new Error('Регистрация временно отключена. Реализуйте вручную.');
 }
 
 /**

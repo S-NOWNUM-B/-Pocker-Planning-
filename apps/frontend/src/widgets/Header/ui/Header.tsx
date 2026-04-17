@@ -24,13 +24,13 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
             <>
               <Link
                 to="/login"
-                className={`inline-flex h-10 items-center justify-center gap-2 rounded-xl px-3 font-inherit font-medium transition-all hover:-translate-y-0.5 active:translate-y-0 ${variantClasses.outline} ${sizeClasses.md}`}
+                className={`inline-flex h-10 items-center justify-center gap-2 rounded-xl px-3 font-inherit font-medium ${variantClasses.outline} ${sizeClasses.md}`}
               >
                 Войти
               </Link>
               <Link
                 to="/register"
-                className={`inline-flex h-10 items-center justify-center gap-2 rounded-xl px-3 font-inherit font-medium transition-all hover:-translate-y-0.5 active:translate-y-0 ${variantClasses.primary} ${sizeClasses.md}`}
+                className={`inline-flex h-10 items-center justify-center gap-2 rounded-xl px-3 font-inherit font-medium ${variantClasses.primary} ${sizeClasses.md}`}
               >
                 Регистрация
               </Link>

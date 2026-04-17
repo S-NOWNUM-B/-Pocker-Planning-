@@ -36,7 +36,7 @@ export function Modal({ children, isOpen, onClose, title, className = '', ...pro
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-foreground">{title}</h2>
             <button
-              className="cursor-pointer rounded-md p-1 text-xl leading-none text-muted-foreground transition hover:bg-secondary/70 hover:text-foreground"
+              className="cursor-pointer rounded-md p-1 text-xl leading-none text-muted-foreground hover:bg-secondary/70 hover:text-foreground"
               onClick={onClose}
             >
               ×

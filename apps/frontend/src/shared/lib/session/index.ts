@@ -1,6 +1,7 @@
 /**
  * Экспорт менеджера сессий.
  *
- * SessionManager — управление JWT-токенами (пока заглушка).
+ * SessionManager — управление сессией пользователя.
  */
+export { SessionManager } from './sessionManager';
 
