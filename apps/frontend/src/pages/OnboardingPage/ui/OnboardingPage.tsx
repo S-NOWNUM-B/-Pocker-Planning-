@@ -1,14 +1,8 @@
 /**
  * Приветственная (onboarding) страница — точка входа в приложение.
- *
- * Расположена на маршруте /. Содержит:
- *  - Hero-секцию с названием проекта и CTA-кнопками
- *  - Блок преимуществ (совместная оценка, реальное время, гибкие колоды, история)
- *  - Секцию «Как это работает» (3 шага)
- *
- * Кнопки ведут на /create-room (быстрый старт) и /login (авторизация).
  */
 import { Link } from 'react-router-dom';
+import { baseButtonClasses, sizeClasses, variantClasses } from '@/shared/ui/Button/Button';
 
 export function OnboardingPage() {
   return (
@@ -20,21 +14,22 @@ export function OnboardingPage() {
         <p className="mx-auto max-w-150 text-base text-muted-foreground md:text-xl">
           Инструмент для оценки задач в Agile-командах с помощью Planning Poker
         </p>
-        <div>
+        <div className="mt-8 flex justify-center gap-4">
           <Link
             to="/create-room"
-            className="mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 font-medium text-white"
+            className={`${baseButtonClasses} ${variantClasses.primary} ${sizeClasses.md} transition-none`}
           >
             Быстрый старт
           </Link>
           <Link
             to="/about"
-            className="mt-8 ml-4 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-secondary px-6 font-medium text-foreground"
+            className={`${baseButtonClasses} ${variantClasses.secondary} ${sizeClasses.md} transition-none`}
           >
             Узнать больше
           </Link>
         </div>
       </section>
+
 
       <section className="text-center">
         <h2 className="mb-8 text-[2rem] text-foreground">Почему Poker Planning?</h2>

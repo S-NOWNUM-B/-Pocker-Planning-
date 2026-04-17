@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Card, Input } from '@/shared/ui';
 import { LinkIcon, PlayIcon, TrophyIcon, UsersIcon } from '@/shared/ui/icons';
 import { createRoomId, type DeckType, type GameSession } from '@/shared/lib/poker';
+import { baseButtonClasses } from '@/shared/ui/Button/Button';
 
 const DECK_INFO: Record<DeckType, { title: string; description: string }> = {
   fibonacci: {
@@ -134,7 +135,7 @@ export function CreateRoomPage() {
                         key={deckKey}
                         type="button"
                         onClick={() => setDeckType(deckKey)}
-                        className={`rounded-2xl border p-4 text-left ${
+                        className={`${baseButtonClasses} border p-4 text-left ${
                           selected
                             ? 'border-primary bg-primary/10 shadow-sm'
                             : 'border-border bg-secondary/40 hover:border-primary/50'
@@ -152,7 +153,7 @@ export function CreateRoomPage() {
                 type="button"
                 onClick={handleStart}
                 disabled={!canStart}
-                className="h-12 w-full rounded-2xl text-base font-semibold"
+                className="h-12 w-full text-base font-semibold"
               >
                 <PlayIcon className="h-4 w-4" />
                 Начать игру

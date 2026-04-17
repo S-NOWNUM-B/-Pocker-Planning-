@@ -21,6 +21,7 @@
 import { Input } from '@/shared/ui';
 import { cn } from '@/shared/lib';
 import type { Task } from '@/shared/lib/poker';
+import { baseButtonClasses } from '@/shared/ui/Button/Button';
 
 interface TaskSidebarProps {
   tasks: Task[];
@@ -71,7 +72,7 @@ export function TaskSidebar({
                 key={task.id}
                 type="button"
                 onClick={() => !isRevealed && onSelectTask(task.id)}
-                className={`w-full rounded-2xl border p-3 text-left ${
+                className={`${baseButtonClasses} w-full border p-3 text-left ${
                   isActive
                     ? 'border-primary/70 bg-primary/12 shadow-sm'
                     : task.estimate

@@ -1,8 +1,8 @@
 import { Link, useMatch } from 'react-router-dom';
 import { useTheme } from '@/shared/lib/hooks';
-import { Button, Card } from '@/shared/ui';
-import { MoonIcon, SunIcon } from '@/shared/ui/icons';
-import { sizeClasses, variantClasses } from '@/shared/ui/Button/Button';
+import { Button } from '@/shared/ui';
+import { MoonIcon, SunIcon, TrophyIcon } from '@/shared/ui/icons';
+import { baseButtonClasses, sizeClasses, variantClasses } from '@/shared/ui/Button/Button';
 
 interface HeaderProps {
   showAuthButtons?: boolean;
@@ -18,23 +18,34 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-card/88 backdrop-blur-xl">
-      <Card className="mx-auto flex max-w-7xl items-center justify-end gap-2 rounded-none border-0 bg-transparent px-4 py-3 shadow-none sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Логотип */}
+        <Link to="/" className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15 text-primary">
+            <TrophyIcon className="h-5 w-5" />
+          </div>
+          <span className="text-xl font-black tracking-tight text-foreground">
+            Poker<span className="text-primary">.</span>Planning
+          </span>
+        </Link>
+
+        {/* Кнопки управления и авторизации */}
         <div className="flex items-center gap-2">
           {showAuthButtons && (
-            <>
+            <div className="hidden items-center gap-2 sm:flex">
               <Link
                 to="/login"
-                className={`inline-flex h-10 items-center justify-center gap-2 rounded-xl px-3 font-inherit font-medium ${variantClasses.outline} ${sizeClasses.md}`}
+                className={`${baseButtonClasses} h-10 px-4 ${variantClasses.outline} ${sizeClasses.md}`}
               >
                 Войти
               </Link>
               <Link
                 to="/register"
-                className={`inline-flex h-10 items-center justify-center gap-2 rounded-xl px-3 font-inherit font-medium ${variantClasses.primary} ${sizeClasses.md}`}
+                className={`${baseButtonClasses} h-10 px-4 ${variantClasses.primary} ${sizeClasses.md}`}
               >
                 Регистрация
               </Link>
-            </>
+            </div>
           )}
 
           <Button
@@ -49,7 +60,7 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
             </span>
           </Button>
         </div>
-      </Card>
+      </div>
     </header>
   );
 }
