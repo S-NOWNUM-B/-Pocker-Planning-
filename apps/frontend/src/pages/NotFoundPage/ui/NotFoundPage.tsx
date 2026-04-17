@@ -7,18 +7,22 @@
  * Уже реализована — изменений не требует.
  */
 import { Link } from 'react-router-dom';
-import { Button, EmptyState } from '@/shared/ui';
+import { Button, Card, EmptyState, PageShell } from '@/shared/ui';
 
 export function NotFoundPage() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-5">
-      <EmptyState
-        title="404 - Страница не найдена"
-        description="Страница, которую вы ищете, не существует"
-      />
-      <Link to="/">
-        <Button variant="primary">Вернуться на главную</Button>
-      </Link>
-    </div>
+    <PageShell maxWidth="md" className="min-h-[calc(100vh-8.5rem)]" contentClassName="flex min-h-[calc(100vh-8.5rem)] items-center justify-center">
+      <Card className="w-full border border-border/70 bg-card/92 p-8 shadow-2xl backdrop-blur">
+        <EmptyState
+          title="404 — страница не найдена"
+          description="Похоже, ссылка устарела или маршрут был удалён"
+        />
+        <div className="flex justify-center">
+          <Button as={Link} to="/" variant="primary">
+            Вернуться на главную
+          </Button>
+        </div>
+      </Card>
+    </PageShell>
   );
 }

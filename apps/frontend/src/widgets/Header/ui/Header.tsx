@@ -1,6 +1,6 @@
 import { Link, useMatch } from 'react-router-dom';
 import { useTheme } from '@/shared/lib/hooks';
-import { Button } from '@/shared/ui';
+import { Switch } from '@/shared/ui';
 import { MoonIcon, SunIcon, TrophyIcon } from '@/shared/ui/icons';
 import { baseButtonClasses, sizeClasses, variantClasses } from '@/shared/ui/Button/Button';
 
@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 export function Header({ showAuthButtons = false }: HeaderProps) {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const isRoomPage = useMatch('/room/:roomId') !== null;
 
   if (isRoomPage) {
@@ -48,17 +48,17 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
             </div>
           )}
 
-          <Button
-            type="button"
-            variant="outline"
-            onClick={toggleTheme}
-            className="h-10 rounded-xl px-3"
-          >
+          <div className="flex h-10 items-center gap-2 rounded-xl border border-border bg-card/70 px-3">
             {theme === 'dark' ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
-            <span className="hidden sm:inline">
+            <Switch
+              checked={theme === 'dark'}
+              onChange={(isDark) => setTheme(isDark ? 'dark' : 'light')}
+              label="Переключить тему"
+            />
+            <span className="hidden text-sm sm:inline">
               {theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
             </span>
-          </Button>
+          </div>
         </div>
       </div>
     </header>

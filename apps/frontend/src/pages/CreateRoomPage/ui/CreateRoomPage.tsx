@@ -13,10 +13,9 @@
  */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card, Input } from '@/shared/ui';
+import { Button, Card, Input, PageShell, RadioGroup } from '@/shared/ui';
 import { LinkIcon, PlayIcon, TrophyIcon, UsersIcon } from '@/shared/ui/icons';
 import { createRoomId, type DeckType, type GameSession } from '@/shared/lib/poker';
-import { baseButtonClasses } from '@/shared/ui/Button/Button';
 
 const DECK_INFO: Record<DeckType, { title: string; description: string }> = {
   fibonacci: {
@@ -54,12 +53,7 @@ export function CreateRoomPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-24 right--6rem h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute bottom-0 left--5rem h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
-      </div>
-      <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-4 py-10 sm:px-6 lg:px-8">
+    <PageShell maxWidth="xl" className="min-h-[calc(100vh-8.5rem)]" contentClassName="flex min-h-[calc(100vh-8.5rem)] flex-col justify-center">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <section className="space-y-6">
             <div className="space-y-4">
@@ -97,7 +91,7 @@ export function CreateRoomPage() {
             </div>
           </section>
 
-          <Card className="border border-border/70 bg-card/95 p-6 shadow-2xl backdrop-blur sm:p-8">
+          <Card className="border border-border/70 bg-card/92 p-6 shadow-2xl backdrop-blur sm:p-8">
             <div className="mb-6 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15 text-primary">
                 <PlayIcon className="h-5 w-5" />
@@ -123,31 +117,18 @@ export function CreateRoomPage() {
                 onChange={(event) => setUserName(event.target.value)}
               />
 
-              <div>
-                <div className="mb-2 text-sm font-medium text-foreground">Колода карт</div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {Object.entries(DECK_INFO).map(([value, deck]) => {
-                    const deckKey = value as DeckType;
-                    const selected = deckType === deckKey;
-
-                    return (
-                      <button
-                        key={deckKey}
-                        type="button"
-                        onClick={() => setDeckType(deckKey)}
-                        className={`${baseButtonClasses} border p-4 text-left ${
-                          selected
-                            ? 'border-primary bg-primary/10 shadow-sm'
-                            : 'border-border bg-secondary/40 hover:border-primary/50'
-                        }`}
-                      >
-                        <div className="font-semibold text-foreground">{deck.title}</div>
-                        <div className="mt-1 text-sm text-muted-foreground">{deck.description}</div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              <RadioGroup
+                label="Колода карт"
+                value={deckType}
+                onChange={setDeckType}
+                options={(Object.entries(DECK_INFO) as Array<[DeckType, (typeof DECK_INFO)[DeckType]]>).map(
+                  ([value, deck]) => ({
+                    value,
+                    title: deck.title,
+                    description: deck.description,
+                  }),
+                )}
+              />
 
               <Button
                 type="button"
@@ -161,7 +142,6 @@ export function CreateRoomPage() {
             </div>
           </Card>
         </div>
-      </main>
-    </div>
+    </PageShell>
   );
 }

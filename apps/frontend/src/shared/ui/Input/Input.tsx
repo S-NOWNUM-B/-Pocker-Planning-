@@ -8,6 +8,7 @@
  * @param error — текст ошибки под полем
  * @param id — id элемента (генерируется из label если не указан)
  */
+import { Field, Input as HeadlessInput, Label } from '@headlessui/react';
 import { type InputHTMLAttributes, forwardRef } from 'react';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -20,20 +21,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
     return (
-      <div className={`flex flex-col gap-1 ${className}`}>
+      <Field className={`flex flex-col gap-1 ${className}`}>
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-muted-foreground">
+          <Label htmlFor={inputId} className="text-sm font-medium text-muted-foreground">
             {label}
-          </label>
+          </Label>
         )}
-        <input
+        <HeadlessInput
           ref={ref}
           id={inputId}
-          className="rounded-lg border border-input bg-input px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/80 focus:border-primary/65 focus:outline-none"
+          className="rounded-lg border border-input bg-input px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/80 transition-colors duration-200 hover:border-primary/45 focus:border-primary/65 focus:outline-none focus:ring-2 focus:ring-ring/35"
           {...props}
         />
         {error && <span className="text-xs text-destructive">{error}</span>}
-      </div>
+      </Field>
     );
   },
 );

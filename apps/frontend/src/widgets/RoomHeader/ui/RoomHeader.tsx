@@ -17,7 +17,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/shared/lib/hooks';
-import { Button, Card } from '@/shared/ui';
+import { Button, Card, Switch } from '@/shared/ui';
 import { LinkIcon, LogOutIcon, MoonIcon, SparklesIcon, SunIcon } from '@/shared/ui/icons';
 
 interface RoomHeaderProps {
@@ -28,7 +28,7 @@ interface RoomHeaderProps {
 
 export function RoomHeader({ roomName, roomId, deckName }: RoomHeaderProps) {
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
 
   const handleCopyLink = async () => {
@@ -84,17 +84,17 @@ export function RoomHeader({ roomName, roomId, deckName }: RoomHeaderProps) {
             <LogOutIcon className="h-4 w-4" />
             <span className="hidden sm:inline">Выйти</span>
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={toggleTheme}
-            className="h-10 rounded-xl px-3"
-          >
+          <div className="flex h-10 items-center gap-2 rounded-xl border border-border bg-card/70 px-3">
             {theme === 'dark' ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
-            <span className="hidden sm:inline">
+            <Switch
+              checked={theme === 'dark'}
+              onChange={(isDark) => setTheme(isDark ? 'dark' : 'light')}
+              label="Переключить тему"
+            />
+            <span className="hidden text-sm sm:inline">
               {theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
             </span>
-          </Button>
+          </div>
         </div>
       </Card>
     </header>
