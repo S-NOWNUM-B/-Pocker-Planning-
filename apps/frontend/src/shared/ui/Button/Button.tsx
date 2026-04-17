@@ -49,7 +49,9 @@ export function Button<E extends ElementType = 'button'>({
   const classes = `${baseButtonClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
   if (!as) {
-    return <HeadlessButton className={classes} {...(props as ComponentPropsWithoutRef<'button'>)} />;
+    return (
+      <HeadlessButton className={classes} {...(props as ComponentPropsWithoutRef<'button'>)} />
+    );
   }
 
   const Component = as as ElementType;

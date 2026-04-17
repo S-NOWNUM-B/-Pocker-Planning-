@@ -4,4 +4,3 @@
  * SessionManager — управление сессией пользователя.
  */
 export { SessionManager } from './sessionManager';
-

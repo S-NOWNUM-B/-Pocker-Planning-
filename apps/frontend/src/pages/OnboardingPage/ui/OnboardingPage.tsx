@@ -16,7 +16,8 @@ export function OnboardingPage() {
           </span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
-          Инструмент для честной и быстрой оценки задач. Устраните предвзятость, вовлеките каждого участника и сделайте планирование прозрачным.
+          Инструмент для честной и быстрой оценки задач. Устраните предвзятость, вовлеките каждого
+          участника и сделайте планирование прозрачным.
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Button as={Link} to="/create-room" size="lg">
@@ -43,22 +44,29 @@ export function OnboardingPage() {
             {[
               {
                 name: 'Совместная оценка',
-                description: 'Вся команда оценивает задачи одновременно, что устраняет эффект «якорного» мнения.',
+                description:
+                  'Вся команда оценивает задачи одновременно, что устраняет эффект «якорного» мнения.',
               },
               {
                 name: 'В реальном времени',
-                description: 'WebSocket-соединение обеспечивает мгновенную синхронизацию голосов между участниками.',
+                description:
+                  'WebSocket-соединение обеспечивает мгновенную синхронизацию голосов между участниками.',
               },
               {
                 name: 'Гибкие колоды',
-                description: 'Поддержка Фибоначчи, T-shirt размеров и пользовательских колод под ваши нужды.',
+                description:
+                  'Поддержка Фибоначчи, T-shirt размеров и пользовательских колод под ваши нужды.',
               },
               {
                 name: 'История сессий',
-                description: 'Все результаты сохраняются и доступны для ретроспективы и анализа в любое время.',
+                description:
+                  'Все результаты сохраняются и доступны для ретроспективы и анализа в любое время.',
               },
             ].map((feature) => (
-              <Card key={feature.name} className="flex flex-col border border-border/70 bg-card/88 p-5 shadow-lg backdrop-blur">
+              <Card
+                key={feature.name}
+                className="flex flex-col border border-border/70 bg-card/88 p-5 shadow-lg backdrop-blur"
+              >
                 <dt className="text-base font-semibold leading-7 text-foreground">
                   <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
                     <div className="h-6 w-6 text-white" aria-hidden="true" />
@@ -78,7 +86,9 @@ export function OnboardingPage() {
       <section className="relative isolate overflow-hidden py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Как это работает</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Как это работает
+            </h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
               Три простых шага к более точным оценкам в вашей команде.
             </p>
@@ -106,7 +116,11 @@ export function OnboardingPage() {
                   dateTime="2024-01-01"
                   className="flex items-center text-sm font-semibold leading-6 text-primary"
                 >
-                  <svg viewBox="0 0 4 4" className="mr-4 h-1 w-1 flex-none fill-primary" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 4 4"
+                    className="mr-4 h-1 w-1 flex-none fill-primary"
+                    aria-hidden="true"
+                  >
                     <circle cx={2} cy={2} r={2} />
                   </svg>
                   Шаг {item.step}
@@ -115,7 +129,9 @@ export function OnboardingPage() {
                     aria-hidden="true"
                   />
                 </time>
-                <p className="mt-6 text-lg font-semibold leading-8 tracking-tight text-foreground">{item.title}</p>
+                <p className="mt-6 text-lg font-semibold leading-8 tracking-tight text-foreground">
+                  {item.title}
+                </p>
                 <p className="mt-1 text-base leading-7 text-muted-foreground">{item.description}</p>
               </div>
             ))}

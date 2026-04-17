@@ -25,11 +25,7 @@ export function VoteButton({ roomId, vote, disabled }: VoteButtonProps) {
   const label = VOTE_LABELS[vote];
 
   return (
-    <Button
-      onClick={() => mutate(vote)}
-      disabled={disabled || isPending}
-      variant="card"
-    >
+    <Button onClick={() => mutate(vote)} disabled={disabled || isPending} variant="card">
       {label}
     </Button>
   );

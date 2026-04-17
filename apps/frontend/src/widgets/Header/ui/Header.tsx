@@ -55,7 +55,7 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
               onChange={(isDark) => setTheme(isDark ? 'dark' : 'light')}
               label="Переключить тему"
             />
-            <span className="hidden text-sm sm:inline">
+            <span className="hidden text-left text-sm sm:inline sm:min-w-30">
               {theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
             </span>
           </div>

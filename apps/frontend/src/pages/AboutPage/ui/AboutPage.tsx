@@ -16,14 +16,16 @@ export function AboutPage() {
     <PageShell maxWidth="xl" className="min-h-[calc(100vh-8.5rem)]">
       <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <Card className="border border-border/70 bg-card/90 p-8 shadow-xl backdrop-blur">
-          <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-4xl">О проекте</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+            О проекте
+          </h1>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
             Poker Planning помогает команде оценивать задачи без предвзятости: каждый голосует
             независимо, а результат обсуждается только после вскрытия карт.
           </p>
           <p className="mt-3 text-base leading-7 text-muted-foreground">
-            Интерфейс адаптирован под командную работу, быстрые раунды и прозрачный процесс
-            принятия оценки.
+            Интерфейс адаптирован под командную работу, быстрые раунды и прозрачный процесс принятия
+            оценки.
           </p>
         </Card>
 

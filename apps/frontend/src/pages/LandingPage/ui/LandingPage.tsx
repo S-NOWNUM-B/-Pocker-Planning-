@@ -22,7 +22,9 @@ export function LandingPage() {
             Единый рабочий ритм для команды: обсуждение, голосование, вскрытие, фиксация.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button as={Link} to="/create-room">Создать комнату</Button>
+            <Button as={Link} to="/create-room">
+              Создать комнату
+            </Button>
             <Button as={Link} to="/about" variant="outline">
               О проекте
             </Button>

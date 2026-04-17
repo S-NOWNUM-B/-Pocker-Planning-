@@ -26,7 +26,9 @@ export function DashboardPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-3xl font-black tracking-tight text-foreground">Dashboard</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Ваши активные и завершённые комнаты</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Ваши активные и завершённые комнаты
+            </p>
           </div>
           <Button as={Link} to="/create-room">
             Создать комнату

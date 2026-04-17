@@ -25,12 +25,16 @@ export function ProfilePage() {
 
         <Card className="border border-border/70 bg-card/90 p-6 shadow-lg backdrop-blur">
           <h2 className="text-lg font-semibold text-foreground">Основные данные</h2>
-          <p className="mt-2 text-sm text-muted-foreground">Форма редактирования имени и email появится здесь.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Форма редактирования имени и email появится здесь.
+          </p>
         </Card>
 
         <Card className="border border-border/70 bg-card/90 p-6 shadow-lg backdrop-blur">
           <h2 className="text-lg font-semibold text-foreground">Безопасность</h2>
-          <p className="mt-2 text-sm text-muted-foreground">Блок смены пароля и настройки сессий.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Блок смены пароля и настройки сессий.
+          </p>
           <Button className="mt-4" variant="outline">
             Выйти из аккаунта
           </Button>

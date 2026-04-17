@@ -1,4 +1,10 @@
-import { Description, Field, Label, Radio, RadioGroup as HeadlessRadioGroup } from '@headlessui/react';
+import {
+  Description,
+  Field,
+  Label,
+  Radio,
+  RadioGroup as HeadlessRadioGroup,
+} from '@headlessui/react';
 
 type Primitive = string | number;
 
