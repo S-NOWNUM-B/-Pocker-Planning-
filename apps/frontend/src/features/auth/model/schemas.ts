@@ -31,6 +31,7 @@ export const RegisterSchema = z
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Пароли не совпадают',
+    path: ['confirmPassword'],
   });
 
 // Алиасы в camelCase для обратной совместимости с текущими импортами.
