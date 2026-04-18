@@ -15,7 +15,7 @@ interface AuthFormProps {
 type AuthFormValues = {
   email: string;
   password: string;
-  username?: string;
+  name?: string;
   confirmPassword?: string;
 };
 
@@ -26,7 +26,7 @@ const loginDefaults = {
 
 const registerDefaults = {
   email: '',
-  username: '',
+  name: '',
   password: '',
   confirmPassword: '',
 };
@@ -54,7 +54,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         const registerValues = values as z.infer<typeof RegisterSchema>;
         await register({
           email: registerValues.email,
-          username: registerValues.username,
+          name: registerValues.name,
           password: registerValues.password,
         });
       }
@@ -86,11 +86,11 @@ export function AuthForm({ mode }: AuthFormProps) {
         <Input
           label="Имя пользователя"
           type="text"
-          autoComplete="username"
-          placeholder="ivan.petrov"
-          error={form.formState.errors.username?.message}
+          autoComplete="name"
+          placeholder="Иван Петров"
+          error={form.formState.errors.name?.message}
           disabled={isSubmitting}
-          {...form.register('username')}
+          {...form.register('name')}
         />
       )}
 

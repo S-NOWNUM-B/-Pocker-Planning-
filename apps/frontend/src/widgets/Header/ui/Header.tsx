@@ -1,16 +1,32 @@
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Link, useMatch } from 'react-router-dom';
 import { useTheme } from '@/shared/lib/hooks';
 import { Switch } from '@/shared/ui';
-import { MoonIcon, SunIcon, TrophyIcon } from '@/shared/ui/icons';
+import { LogOutIcon, MoonIcon, SunIcon, TrophyIcon, UsersIcon } from '@/shared/ui/icons';
 import { baseButtonClasses, sizeClasses, variantClasses } from '@/shared/ui/Button/Button';
 
 interface HeaderProps {
   showAuthButtons?: boolean;
+  showLoginButton?: boolean;
+  showRegisterButton?: boolean;
+  showProfileMenu?: boolean;
+  profileLabel?: string;
+  onLogout?: () => void;
 }
 
-export function Header({ showAuthButtons = false }: HeaderProps) {
+export function Header({
+  showAuthButtons = false,
+  showLoginButton,
+  showRegisterButton,
+  showProfileMenu = false,
+  profileLabel = 'Профиль',
+  onLogout,
+}: HeaderProps) {
   const { theme, setTheme } = useTheme();
   const isRoomPage = useMatch('/room/:roomId') !== null;
+  const shouldShowLoginButton = showLoginButton ?? showAuthButtons;
+  const shouldShowRegisterButton = showRegisterButton ?? showAuthButtons;
+  const showAuthControls = shouldShowLoginButton || shouldShowRegisterButton;
 
   if (isRoomPage) {
     return null;
@@ -31,21 +47,61 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
 
         {/* Кнопки управления и авторизации */}
         <div className="flex items-center gap-2">
-          {showAuthButtons && (
+          {showAuthControls && (
             <div className="hidden items-center gap-2 sm:flex">
-              <Link
-                to="/login"
-                className={`${baseButtonClasses} h-10 px-4 ${variantClasses.outline} ${sizeClasses.md}`}
-              >
-                Войти
-              </Link>
-              <Link
-                to="/register"
-                className={`${baseButtonClasses} h-10 px-4 ${variantClasses.primary} ${sizeClasses.md}`}
-              >
-                Регистрация
-              </Link>
+              {shouldShowLoginButton && (
+                <Link
+                  to="/login"
+                  className={`${baseButtonClasses} h-10 px-4 ${variantClasses.outline} ${sizeClasses.md}`}
+                >
+                  Войти
+                </Link>
+              )}
+              {shouldShowRegisterButton && (
+                <Link
+                  to="/register"
+                  className={`${baseButtonClasses} h-10 px-4 ${variantClasses.primary} ${sizeClasses.md}`}
+                >
+                  Регистрация
+                </Link>
+              )}
             </div>
+          )}
+
+          {showProfileMenu && (
+            <Menu as="div" className="relative hidden sm:block">
+              <MenuButton
+                className={`${baseButtonClasses} h-10 max-w-220px truncate px-4 ${variantClasses.outline} ${sizeClasses.md}`}
+              >
+                {profileLabel}
+              </MenuButton>
+
+              <MenuItems
+                anchor="bottom end"
+                className="mt-2 w-56 origin-top-right rounded-xl border border-border/70 bg-card p-1.5 shadow-xl focus:outline-none"
+              >
+                <MenuItem>
+                  <Link
+                    to="/dashboard"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors data-focus:bg-secondary/80"
+                  >
+                    <UsersIcon className="h-4 w-4" />
+                    <span>Команты</span>
+                  </Link>
+                </MenuItem>
+
+                <MenuItem>
+                  <button
+                    type="button"
+                    onClick={onLogout}
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-destructive transition-colors data-focus:bg-destructive/10"
+                  >
+                    <LogOutIcon className="h-4 w-4" />
+                    <span>Выйти из аккаунта</span>
+                  </button>
+                </MenuItem>
+              </MenuItems>
+            </Menu>
           )}
 
           <div className="flex h-10 items-center gap-2 rounded-xl border border-border bg-card/70 px-3">

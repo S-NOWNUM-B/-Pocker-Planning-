@@ -14,7 +14,7 @@ import type { ApiError } from '@poker/shared';
 import { SessionManager } from '@/shared/lib/session';
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -33,10 +33,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const detail = error.response?.data?.detail;
     const apiError: ApiError = {
       statusCode: error.response?.status || 500,
       error: error.response?.data?.error || 'Unknown error',
-      message: error.response?.data?.message || error.message,
+      message: error.response?.data?.message || (typeof detail === 'string' ? detail : error.message),
     };
     return Promise.reject(apiError);
   },

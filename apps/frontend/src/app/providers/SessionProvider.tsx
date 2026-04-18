@@ -11,59 +11,25 @@
  * Используется в SessionProvider для оборачивания приложения.
  */
 import { createContext, useContext, useEffect, useState } from 'react';
+import { getUser as getUserRequest, login as loginRequest, register as registerRequest } from '@/entities/user';
+import type { ApiError } from '@/shared/api';
 import type { User } from '@/entities/user';
 import type { LoginCredentials, RegisterCredentials } from '@/entities/user';
 import { SessionManager } from '@/shared/lib/session';
 
-const MOCK_USERS_KEY = 'mock_auth_users';
-const CURRENT_USER_KEY = 'mock_current_user';
-
-interface StoredUser {
-  user: User;
-  password: string;
-}
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const readUsers = (): StoredUser[] => {
-  const raw = localStorage.getItem(MOCK_USERS_KEY);
-  if (!raw) {
-    return [];
+const parseApiErrorMessage = (error: unknown) => {
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    return (error as ApiError).message;
   }
 
-  try {
-    const parsed = JSON.parse(raw) as StoredUser[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-};
-
-const saveUsers = (users: StoredUser[]) => {
-  localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
-};
-
-const saveCurrentUser = (user: User) => {
-  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-};
-
-const readCurrentUser = (): User | null => {
-  const raw = localStorage.getItem(CURRENT_USER_KEY);
-  if (!raw) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(raw) as User;
-  } catch {
-    return null;
-  }
+  return 'Произошла ошибка. Попробуйте позже.';
 };
 
 export interface SessionContextValue {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  hasRegisteredUsers: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => void;
@@ -83,6 +49,7 @@ const SessionContext = createContext<SessionContextValue | undefined>(undefined)
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasRegisteredUsers, setHasRegisteredUsers] = useState(false);
 
   // Инициализация сессии при загрузке приложения
   useEffect(() => {
@@ -96,14 +63,14 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        const currentUser = readCurrentUser();
-        if (!currentUser) {
+        try {
+          const currentUser = await getUserRequest();
+          setUser(currentUser);
+          setHasRegisteredUsers(true);
+        } catch {
           SessionManager.removeToken();
           setUser(null);
-          return;
         }
-
-        setUser(currentUser);
       } finally {
         setIsLoading(false);
       }
@@ -113,54 +80,29 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const handleLogin = async (credentials: LoginCredentials) => {
-    await wait(250);
-
-    const users = readUsers();
-    const matched = users.find(
-      (item) =>
-        item.user.email.toLowerCase() === credentials.email.toLowerCase() &&
-        item.password === credentials.password,
-    );
-
-    if (!matched) {
-      throw new Error('Неверный email или пароль');
+    try {
+      const authData = await loginRequest(credentials);
+      SessionManager.saveToken(authData.access_token);
+      setUser(authData.user);
+      setHasRegisteredUsers(true);
+    } catch (error) {
+      throw new Error(parseApiErrorMessage(error));
     }
-
-    SessionManager.saveToken(`mock-token-${matched.user.id}`);
-    saveCurrentUser(matched.user);
-    setUser(matched.user);
   };
 
   const handleRegister = async (credentials: RegisterCredentials) => {
-    await wait(250);
-
-    const users = readUsers();
-    const alreadyExists = users.some(
-      (item) => item.user.email.toLowerCase() === credentials.email.toLowerCase(),
-    );
-
-    if (alreadyExists) {
-      throw new Error('Пользователь с таким email уже существует');
+    try {
+      const authData = await registerRequest(credentials);
+      SessionManager.saveToken(authData.access_token);
+      setUser(authData.user);
+      setHasRegisteredUsers(true);
+    } catch (error) {
+      throw new Error(parseApiErrorMessage(error));
     }
-
-    const newUser: User = {
-      id: crypto.randomUUID(),
-      email: credentials.email,
-      username: credentials.username,
-      createdAt: new Date().toISOString(),
-    };
-
-    const nextUsers: StoredUser[] = [...users, { user: newUser, password: credentials.password }];
-    saveUsers(nextUsers);
-
-    SessionManager.saveToken(`mock-token-${newUser.id}`);
-    saveCurrentUser(newUser);
-    setUser(newUser);
   };
 
   const handleLogout = () => {
     SessionManager.removeToken();
-    localStorage.removeItem(CURRENT_USER_KEY);
     setUser(null);
   };
 
@@ -168,6 +110,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     user,
     isLoading,
     isAuthenticated: user !== null,
+    hasRegisteredUsers,
     login: handleLogin,
     register: handleRegister,
     logout: handleLogout,

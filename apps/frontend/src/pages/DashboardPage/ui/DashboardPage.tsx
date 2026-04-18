@@ -25,7 +25,7 @@ export function DashboardPage() {
       <section className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-black tracking-tight text-foreground">Dashboard</h1>
+            <h1 className="text-3xl font-black tracking-tight text-foreground">Мои комнаты</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Ваши активные и завершённые комнаты
             </p>

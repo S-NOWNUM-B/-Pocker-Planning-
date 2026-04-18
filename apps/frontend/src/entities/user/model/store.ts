@@ -26,7 +26,7 @@ export const useUserStore = create<UserState>((set) => ({
     set({ isLoading: true }); // Установка флага загрузки
     try {
       const data = await userAPI.login(credentials); // Вызов API для логина
-      SessionManager.saveToken(data.accessToken); // Сохранение токена в SessionManager
+      SessionManager.saveToken(data.access_token); // Сохранение токена в SessionManager
       set({ user: data.user, isAuth: true }); // Обновление состояния пользователя и флага аутентификации
     } finally {
       set({ isLoading: false }); // Сброс флага загрузки после завершения операции

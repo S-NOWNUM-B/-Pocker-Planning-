@@ -10,9 +10,9 @@
 export interface IUser {
   id: string;
   email: string;
-  username: string;
-  avatarColor?: string;
-  createdAt: string;
+  name: string;
+  avatar_color: string;
+  created_at: string;
 }
 
 export interface ILoginCredentails {
@@ -22,22 +22,25 @@ export interface ILoginCredentails {
 
 export interface IRegisterCredentials {
   email: string;
-  username: string;
+  name: string;
   password: string;
 }
 
 export interface ILoginResponse {
   user: IUser;
-  accessToken: string;
+  access_token: string;
+  token_type: 'bearer';
 }
 
 export interface IRegisterResponse {
   user: IUser;
-  accessToken: string;
+  access_token: string;
+  token_type: 'bearer';
 }
 
 export interface AuthTokens {
-  accessToken: string;
+  access_token: string;
+  token_type: 'bearer';
 }
 
 export type User = IUser;
