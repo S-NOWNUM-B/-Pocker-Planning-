@@ -1,5 +1,7 @@
 export { OnboardingPage } from './OnboardingPage';
 export { CreateRoomPage } from './CreateRoomPage';
+export { JoinRoomPage } from './JoinRoomPage';
+export { InvitePage } from './InvitePage';
 export { LoginPage } from './LoginPage';
 export { RegisterPage } from './RegisterPage';
 export { DashboardPage } from './DashboardPage';

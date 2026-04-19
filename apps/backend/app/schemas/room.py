@@ -143,6 +143,7 @@ class RoomSnapshotResponse(BaseModel):
 
 class RoomListItemResponse(BaseModel):
     id: UUID
+    owner_id: UUID
     name: str
     slug: str
     description: str

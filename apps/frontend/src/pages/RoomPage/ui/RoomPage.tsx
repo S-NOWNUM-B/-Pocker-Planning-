@@ -1,194 +1,275 @@
-/**
- * Страница игровой комнаты — основной рабочий экран Planning Poker.
- *
- * Маршрут: /room/:roomId.
- *
- * Функциональность:
- *  - Чтение сессии из localStorage (GameSession)
- *  - Привязка комнаты к создателю (ownerId/ownerName)
- *  - Управление игроками (пока только локальный пользователь + боты)
- *  - Добавление задач для оценки через TaskSidebar
- *  - Выбор карты через VotingCards
- *  - Раскрытие результатов и подсчёт среднего значения
- *  - Копирование ссылки на комнату для приглашения участников
- *
- * Виджеты: RoomHeader, TaskSidebar, RoomResults, ParticipantsList, VotingCards.
- *
- * В будущей реализации сессия будет синхронизироваться через WebSocket
- * и данные будут загружаться с backend через TanStack Query.
- */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Navigate } from 'react-router-dom';
+import { useSession } from '@/app/providers';
+import { roomApi } from '@/entities/room';
+import type { RoomSnapshot } from '@/entities/room/model/types';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import { Card } from '@/shared/ui';
-import {
-  DECKS,
-  SESSION_STORAGE_KEY,
-  createRoomId,
-  getAverageVote,
-  type DeckType,
-  type GameSession,
-  type Player,
-  type Task,
-} from '@/shared/lib/poker';
+import { Card, Spinner } from '@/shared/ui';
+import { SESSION_STORAGE_KEY, type GameSession, type Player, type Task } from '@/shared/lib/poker';
 import { ParticipantsList, RoomFooter, RoomHeader, RoomResults, TaskSidebar } from '@/widgets';
 import { useRoomParams } from '../lib/useRoomParams';
 
-function readSession(roomId: string) {
-  try {
-    const rawSession = window.localStorage.getItem(SESSION_STORAGE_KEY);
-    if (!rawSession) {
-      return null;
-    }
-
-    const parsed = JSON.parse(rawSession) as Partial<GameSession>;
-    if (parsed.roomId !== roomId || !parsed.roomName || !parsed.userName || !parsed.deckType) {
-      return null;
-    }
-
-    return {
-      roomId: parsed.roomId,
-      roomName: parsed.roomName,
-      userName: parsed.userName,
-      deckType: parsed.deckType,
-      ownerId: parsed.ownerId || parsed.userName,
-      ownerName: parsed.ownerName || parsed.userName,
-    } satisfies GameSession;
-  } catch {
-    return null;
+function toAverageLabel(value: number | null | undefined) {
+  if (value === null || value === undefined) {
+    return '0';
   }
+
+  return Number.isInteger(value) ? value.toString() : value.toFixed(1);
 }
 
-function getDeckName(deckType: DeckType) {
-  return deckType === 'fibonacci' ? 'Фибоначчи' : 'Чётная';
+function roomRefLooksLikeCode(value: string) {
+  return /^[a-zA-Z]{4}$/.test(value);
+}
+
+async function loadRoomSnapshot(roomRef: string): Promise<RoomSnapshot> {
+  try {
+    return await roomApi.getRoomSnapshot(roomRef);
+  } catch {
+    if (roomRefLooksLikeCode(roomRef)) {
+      return roomApi.joinRoomByCode(roomRef.toUpperCase());
+    }
+
+    throw new Error('room_not_available');
+  }
 }
 
 export function RoomPage() {
-  const { roomId } = useRoomParams();
-  const [session, setSession] = useState<GameSession | null>(null);
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+  const { roomId: roomRef } = useRoomParams();
+  const { user } = useSession();
+  const queryClient = useQueryClient();
   const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [selectedCard, setSelectedCard] = useState<string | null>(null);
-  const [isRevealed, setIsRevealed] = useState(false);
-  const [celebrate, setCelebrate] = useState(false);
+
+  const roomQuery = useQuery({
+    queryKey: ['room', roomRef, user?.id],
+    enabled: Boolean(user),
+    queryFn: () => loadRoomSnapshot(roomRef),
+    refetchInterval: 4000,
+  });
+
+  const snapshot = roomQuery.data;
+  const roomId = snapshot?.room.id;
+
+  const refreshRoomData = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['room', roomRef, user?.id] }),
+      queryClient.invalidateQueries({ queryKey: ['rooms'] }),
+      queryClient.invalidateQueries({ queryKey: ['room-history', roomId] }),
+    ]);
+  };
+
+  const createTaskMutation = useMutation({
+    mutationFn: (title: string) => roomApi.createTask(roomId as string, title),
+    onSuccess: refreshRoomData,
+  });
+
+  const selectTaskMutation = useMutation({
+    mutationFn: (taskId: string) => roomApi.selectTask(roomId as string, taskId),
+    onSuccess: refreshRoomData,
+  });
+
+  const startRoundMutation = useMutation({
+    mutationFn: (taskId: string) => roomApi.startRound(roomId as string, taskId),
+    onSuccess: refreshRoomData,
+  });
+
+  const voteMutation = useMutation({
+    mutationFn: ({ roundId, value }: { roundId: string; value: string }) =>
+      roomApi.submitVote(roomId as string, roundId, value),
+    onSuccess: refreshRoomData,
+  });
+
+  const revealMutation = useMutation({
+    mutationFn: (roundId: string) => roomApi.revealRound(roomId as string, roundId),
+    onSuccess: refreshRoomData,
+  });
+
+  const finalizeMutation = useMutation({
+    mutationFn: ({ roundId, resultValue }: { roundId: string; resultValue?: string }) =>
+      roomApi.finalizeRound(roomId as string, roundId, resultValue),
+    onSuccess: refreshRoomData,
+  });
 
   useEffect(() => {
-    const storedSession = readSession(roomId);
-
-    if (!storedSession) {
-      setSession(null);
+    if (!user || !snapshot) {
       return;
     }
 
-    setSession(storedSession);
-    setPlayers([
-      {
-        id: storedSession.ownerId,
-        name: storedSession.userName,
-        role: 'Создатель',
-        vote: null,
-        isThinking: false,
-        isBot: false,
-      },
-    ]);
-  }, [roomId]);
-
-  const deck = useMemo(() => {
-    return session ? DECKS[session.deckType] : DECKS.fibonacci;
-  }, [session]);
-
-  const activeTask = activeTaskId ? (tasks.find((task) => task.id === activeTaskId) ?? null) : null;
-  const allPlayersVoted = players.every((player) => player.vote !== null);
-  const anyPlayerVoted = players.some((player) => player.vote !== null);
-  const average = getAverageVote(players);
-
-  const handleSelectCard = (card: string) => {
-    if (isRevealed) {
-      return;
-    }
-
-    if (!activeTask) {
-      return;
-    }
-
-    setSelectedCard(card);
-    setPlayers((currentPlayers) =>
-      currentPlayers.map((player) => (!player.isBot ? { ...player, vote: card } : player)),
-    );
-  };
-
-  const handleReveal = () => {
-    if (!activeTask) {
-      return;
-    }
-
-    setIsRevealed(true);
-
-    if (activeTaskId) {
-      setTasks((currentTasks) =>
-        currentTasks.map((task) =>
-          task.id === activeTaskId ? { ...task, estimate: average } : task,
-        ),
-      );
-    }
-
-    const votes = players
-      .map((player) => player.vote)
-      .filter((vote): vote is string => vote !== null && vote !== '?' && vote !== '☕');
-    if (votes.length > 0 && votes.every((vote) => vote === votes[0])) {
-      setCelebrate(true);
-      window.setTimeout(() => setCelebrate(false), 2200);
-    }
-  };
-
-  const handleClearTable = () => {
-    const nextTask = tasks.find((task) => task.id !== activeTaskId && !task.estimate);
-
-    if (nextTask) {
-      setActiveTaskId(nextTask.id);
-    }
-
-    setIsRevealed(false);
-    setSelectedCard(null);
-    setPlayers((currentPlayers) =>
-      currentPlayers.map((player) => ({ ...player, vote: null, isThinking: false })),
-    );
-  };
-
-  const handleAddTask = () => {
-    if (!newTaskTitle.trim()) {
-      return;
-    }
-
-    const newTask: Task = {
-      id: `${createRoomId(newTaskTitle)}-${Date.now()}`,
-      title: newTaskTitle.trim(),
-      estimate: null,
+    const isOwner = user.id === snapshot.room.owner_id;
+    const session: GameSession = {
+      roomId: snapshot.room.slug,
+      roomName: snapshot.room.name,
+      userName: user.name,
+      ownerId: snapshot.room.owner_id,
+      ownerName: isOwner ? user.name : 'Владелец комнаты',
+      deckType: snapshot.room.deck.code === 'even' ? 'even' : 'fibonacci',
     };
 
-    setTasks((currentTasks) => [...currentTasks, newTask]);
-    setActiveTaskId((currentActiveTaskId) => currentActiveTaskId ?? newTask.id);
+    window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+  }, [snapshot, user]);
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (roomQuery.isLoading) {
+    return (
+      <div className="flex min-h-[calc(100vh-8.5rem)] items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (roomQuery.isError || !snapshot) {
+    return <NotFoundPage />;
+  }
+
+  const isOwner = user.id === snapshot.room.owner_id;
+
+  const tasks = [...snapshot.tasks]
+    .sort((a, b) => a.position - b.position)
+    .map(
+      (task): Task => ({
+        id: task.id,
+        title: task.title,
+        estimate: task.estimate_value,
+      }),
+    );
+
+  const activeTaskId = snapshot.active_round?.task_id ?? snapshot.room.current_task_id;
+  const activeTask = activeTaskId ? tasks.find((task) => task.id === activeTaskId) ?? null : null;
+  const isRevealed = snapshot.active_round?.status === 'revealed';
+  const allPlayersVoted =
+    snapshot.active_round !== null
+      ? snapshot.active_round.votes_submitted >= snapshot.active_round.total_participants
+      : false;
+  const anyPlayerVoted = snapshot.active_round !== null ? snapshot.active_round.votes_submitted > 0 : false;
+
+  const voteValueByParticipantId = new Map(
+    (snapshot.active_round?.votes ?? []).map((vote) => [vote.participant_id, vote]),
+  );
+
+  const players = snapshot.participants.map(
+    (participant): Player => {
+      const roundVote = voteValueByParticipantId.get(participant.id);
+      const vote =
+        snapshot.active_round?.status === 'revealed'
+          ? roundVote?.value ?? null
+          : participant.has_voted
+            ? '✓'
+            : null;
+
+      return {
+        id: participant.id,
+        name: participant.name,
+        role: participant.role === 'owner' ? 'Создатель' : 'Участник',
+        vote,
+        isThinking: false,
+        isBot: false,
+      };
+    },
+  );
+
+  const selectedCard = snapshot.active_round?.self_vote_value ?? null;
+  const average = toAverageLabel(snapshot.active_round?.average_score);
+
+  const isBusy =
+    createTaskMutation.isPending ||
+    selectTaskMutation.isPending ||
+    startRoundMutation.isPending ||
+    voteMutation.isPending ||
+    revealMutation.isPending ||
+    finalizeMutation.isPending;
+
+  const handleSelectCard = async (card: string) => {
+    if (!activeTask || isBusy) {
+      return;
+    }
+
+    const activeRound = snapshot.active_round;
+
+    if (!activeRound) {
+      if (!isOwner) {
+        return;
+      }
+
+      const startedSnapshot = await startRoundMutation.mutateAsync(activeTask.id);
+      if (!startedSnapshot.active_round) {
+        return;
+      }
+
+      await voteMutation.mutateAsync({
+        roundId: startedSnapshot.active_round.id,
+        value: card,
+      });
+      return;
+    }
+
+    if (activeRound.status !== 'voting') {
+      return;
+    }
+
+    await voteMutation.mutateAsync({
+      roundId: activeRound.id,
+      value: card,
+    });
+  };
+
+  const handleReveal = async () => {
+    if (!isOwner || !snapshot.active_round || snapshot.active_round.status !== 'voting' || isBusy) {
+      return;
+    }
+
+    await revealMutation.mutateAsync(snapshot.active_round.id);
+  };
+
+  const handleNextTask = async () => {
+    if (!isOwner || !snapshot.active_round || snapshot.active_round.status !== 'revealed' || isBusy) {
+      return;
+    }
+
+    const roundId = snapshot.active_round.id;
+    const resultValue = snapshot.active_round.suggested_result ?? undefined;
+
+    await finalizeMutation.mutateAsync({ roundId, resultValue });
+
+    const nextTask = snapshot.tasks
+      .filter((task) => task.id !== snapshot.active_round?.task_id && task.estimate_value === null)
+      .sort((a, b) => a.position - b.position)[0];
+
+    if (nextTask) {
+      await selectTaskMutation.mutateAsync(nextTask.id);
+    }
+  };
+
+  const handleAddTask = async () => {
+    const title = newTaskTitle.trim();
+    if (!title || !isOwner || !roomId || isBusy) {
+      return;
+    }
+
+    await createTaskMutation.mutateAsync(title);
     setNewTaskTitle('');
   };
 
-  if (!session) {
-    return <NotFoundPage />;
-  }
+  const handleSelectTask = async (taskId: string) => {
+    if (!isOwner || isBusy || snapshot.active_round?.status === 'voting') {
+      return;
+    }
+
+    await selectTaskMutation.mutateAsync(taskId);
+  };
 
   return (
     <div className="relative flex h-screen flex-col overflow-hidden">
       <div className="pointer-events-none absolute -left-24 top-20 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 bottom-24 h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
 
-      {celebrate && (
-        <div className="pointer-events-none fixed inset-0 z-50 bg-primary/10 animate-pulse" />
-      )}
-
       <RoomHeader
-        roomName={session.roomName}
-        roomId={roomId}
-        deckName={getDeckName(session.deckType)}
+        roomName={snapshot.room.name}
+        roomId={snapshot.room.slug}
+        deckName={snapshot.room.deck.code === 'even' ? 'Чётная' : 'Фибоначчи'}
+        inviteLink={snapshot.room.invite_link}
       />
 
       <main className="relative mx-auto grid w-full max-w-7xl min-h-0 flex-1 gap-3 overflow-y-auto px-4 py-3 pb-4 sm:px-6 sm:py-4 sm:pb-5 lg:grid-cols-[20rem_minmax(0,1fr)] lg:overflow-visible lg:px-8">
@@ -199,7 +280,7 @@ export function RoomPage() {
           newTaskTitle={newTaskTitle}
           onNewTaskTitleChange={setNewTaskTitle}
           onAddTask={handleAddTask}
-          onSelectTask={setActiveTaskId}
+          onSelectTask={handleSelectTask}
           className="h-auto min-h-0 lg:h-full lg:max-h-full"
         />
 
@@ -211,7 +292,10 @@ export function RoomPage() {
                   Создатель комнаты
                 </div>
                 <div className="mt-1 text-sm font-semibold text-foreground">
-                  {session.ownerName}
+                  {isOwner
+                    ? user.name
+                    : snapshot.participants.find((participant) => participant.role === 'owner')?.name ||
+                      'Владелец комнаты'}
                 </div>
               </div>
             </div>
@@ -224,7 +308,7 @@ export function RoomPage() {
             allPlayersVoted={allPlayersVoted}
             anyPlayerVoted={anyPlayerVoted}
             onReveal={handleReveal}
-            onNextTask={handleClearTable}
+            onNextTask={handleNextTask}
             className="h-auto min-h-48 lg:h-full"
           />
 
@@ -237,10 +321,12 @@ export function RoomPage() {
       </main>
 
       <RoomFooter
-        cards={deck}
+        cards={snapshot.room.deck.cards}
         selectedCard={selectedCard}
-        disabled={isRevealed || !activeTask}
-        onSelectCard={handleSelectCard}
+        disabled={isRevealed || !activeTask || isBusy}
+        onSelectCard={(card) => {
+          void handleSelectCard(card);
+        }}
       />
     </div>
   );

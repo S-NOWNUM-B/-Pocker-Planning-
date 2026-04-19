@@ -1,60 +1,70 @@
 /**
  * Дашборд пользователя — список всех комнат.
  *
- * Должна отображать две секции:
- *  1. Активные комнаты — где пользователь является модератором или участником
- *     и сессия ещё не завершена.
- *  2. Завершённые сессии — история с датами, названиями комнат и результатами.
+ * Отображает:
+ *  - Активные комнаты — где пользователь является участником.
+ *  - Кнопки создания и присоединения к комнате.
  *
  * Данные загружаются через TanStack Query (GET /rooms).
- * Каждая карточка комнаты содержит:
- *  - Название комнаты
- *  - Статус (ожидание / голосование / завершена)
- *  - Количество участников
- *  - Дату создания
- *  - Кнопку «Открыть» для перехода в комнату
- *
- * Также должна быть кнопка «Создать комнату» → переход на /create-room
  */
 import { Link } from 'react-router-dom';
-import { Button, Card, PageShell } from '@/shared/ui';
+import { useQuery } from '@tanstack/react-query';
+import { Button, PageShell, Spinner, EmptyState } from '@/shared/ui';
+import { RoomCard, roomApi } from '@/entities/room';
 
 export function DashboardPage() {
+
+  const {
+    data: rooms,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['rooms'],
+    queryFn: roomApi.listRooms,
+  });
+
   return (
     <PageShell className="min-h-[calc(100vh-8.5rem)]">
-      <section className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <section className="space-y-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black tracking-tight text-foreground">Мои комнаты</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Ваши активные и завершённые комнаты
+              Управляйте вашими сессиями планирования и оценки
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Button as={Link} to="/create-room">
               Создать комнату
             </Button>
 
             <Button as={Link} to="/join-room" variant="outline">
-              Присоединиться к комнате
+              Присоединиться
             </Button>
           </div>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          <Card className="border border-border/70 bg-card/90 p-6 shadow-lg backdrop-blur">
-            <h2 className="text-lg font-semibold text-foreground">Активные комнаты</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Здесь будут комнаты, где оценка ещё не завершена.
-            </p>
-          </Card>
-          <Card className="border border-border/70 bg-card/90 p-6 shadow-lg backdrop-blur">
-            <h2 className="text-lg font-semibold text-foreground">История сессий</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Здесь появятся завершённые сессии с результатами.
-            </p>
-          </Card>
-        </div>
+        {isLoading ? (
+          <div className="flex min-h-100 items-center justify-center">
+            <Spinner size="lg" />
+          </div>
+        ) : isError ? (
+          <EmptyState
+            title="Ошибка загрузки"
+            description="Не удалось загрузить список комнат. Попробуйте обновить страницу."
+          />
+        ) : rooms && rooms.length > 0 ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {rooms.map((room) => (
+              <RoomCard key={room.id} room={room} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            title="У вас пока нет комнат"
+            description="Создайте свою первую комнату для оценки задач или присоединитесь к существующей по ссылке."
+          />
+        )}
       </section>
     </PageShell>
   );

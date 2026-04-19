@@ -4,6 +4,8 @@ import { AuthGuard, PublicOnlyGuard } from '@/app/router/guards';
 import {
   OnboardingPage,
   CreateRoomPage,
+  JoinRoomPage,
+  InvitePage,
   LoginPage,
   RegisterPage,
   DashboardPage,
@@ -19,6 +21,8 @@ export function AppRoutes() {
       {/* Публичные маршруты */}
       <Route path="/" element={<OnboardingPage />} />
       <Route path="/create-room" element={<CreateRoomPage />} />
+      <Route path="/join-room" element={<JoinRoomPage />} />
+      <Route path="/invite/:token" element={<InvitePage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/room/:roomId" element={<RoomPage />} />
 

@@ -55,6 +55,15 @@ def get_room(room_id: UUID, db: Session = Depends(get_db), current_user: User = 
     )
 
 
+@router.delete("/{room_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_room(
+    room_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> None:
+    RoomService(db).delete_room(room_id, current_user)
+
+
 @router.post("/{room_id}/invite-links", response_model=InvitationLinkResponse, status_code=status.HTTP_201_CREATED)
 def create_invite_link(
     room_id: UUID,
@@ -72,6 +81,21 @@ async def join_room_by_invitation(
     current_user: User = Depends(get_current_user),
 ) -> RoomSnapshotResponse:
     room, participant = RoomService(db).join_by_invitation(token, current_user)
+    await room_connection_manager.broadcast_snapshot(room.id, "room.updated", {"reason": "participant_joined"})
+    return RoomStateService(db).build_snapshot(
+        room.id,
+        online_participant_ids=room_connection_manager.online_participant_ids(room.id),
+        viewer_participant_id=participant.id,
+    )
+
+
+@router.post("/code/{room_code}/join", response_model=RoomSnapshotResponse)
+async def join_room_by_code(
+    room_code: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> RoomSnapshotResponse:
+    room, participant = RoomService(db).join_by_code(room_code, current_user)
     await room_connection_manager.broadcast_snapshot(room.id, "room.updated", {"reason": "participant_joined"})
     return RoomStateService(db).build_snapshot(
         room.id,

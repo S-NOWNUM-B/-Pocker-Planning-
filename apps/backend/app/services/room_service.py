@@ -1,5 +1,5 @@
-import re
 import secrets
+import string
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
@@ -31,9 +31,15 @@ class RoomService:
         return [DeckPresetResponse.model_validate(deck) for deck in self.rooms.list_decks()]
 
     def _slugify(self, value: str) -> str:
-        normalized = re.sub(r"[^a-zA-Z0-9]+", "-", value.strip().lower()).strip("-")
-        base = normalized or "team-room"
-        return f"{base}-{secrets.token_hex(3)}"
+        del value
+        alphabet = string.ascii_uppercase
+        for _ in range(50):
+            room_code = "".join(secrets.choice(alphabet) for _ in range(4))
+            if not self.rooms.slug_exists(room_code):
+                return room_code
+
+        # Крайне редкий fallback на случай коллизий.
+        return f"{''.join(secrets.choice(alphabet) for _ in range(4))}{secrets.token_hex(1).upper()}"
 
     def _build_invitation_response(self, invitation) -> InvitationLinkResponse:
         return InvitationLinkResponse(
@@ -107,6 +113,7 @@ class RoomService:
             result.append(
                 RoomListItemResponse(
                     id=room.id,
+                    owner_id=room.owner_id,
                     name=room.name,
                     slug=room.slug,
                     description=room.description,
@@ -118,6 +125,11 @@ class RoomService:
                 )
             )
         return result
+
+    def delete_room(self, room_id: UUID, user: User) -> None:
+        room, _ = self.require_owner(room_id, user)
+        self.db.delete(room)
+        self.db.commit()
 
     def create_invitation(self, room_id: UUID, payload: InvitationCreateRequest, user: User) -> InvitationLinkResponse:
         self.require_owner(room_id, user)
@@ -151,6 +163,27 @@ class RoomService:
                 role=RoomRole.MEMBER,
                 seat_index=seat_index,
             )
+        self.rooms.touch_room(room)
+        self.db.commit()
+        self.db.refresh(participant)
+        return room, participant
+
+    def join_by_code(self, room_code: str, user: User) -> tuple[Room, RoomParticipant]:
+        normalized_code = room_code.strip().upper()
+        room = self.rooms.get_room_by_slug(normalized_code)
+        if room is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Комната с таким кодом не найдена")
+
+        participant = self.rooms.get_participant(room.id, user.id)
+        if participant is None:
+            seat_index = self.rooms.get_participant_count(room.id)
+            participant = self.rooms.create_participant(
+                room_id=room.id,
+                user_id=user.id,
+                role=RoomRole.MEMBER,
+                seat_index=seat_index,
+            )
+
         self.rooms.touch_room(room)
         self.db.commit()
         self.db.refresh(participant)

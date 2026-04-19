@@ -21,10 +21,10 @@ export function CreateRoomForm() {
   const navigate = useNavigate();
 
   const createMutation = useMutation({
-    mutationFn: () => roomApi.createRoom(name),
-    onSuccess: (room) => {
+    mutationFn: () => roomApi.createRoom(name.trim(), 'fibonacci'),
+    onSuccess: (snapshot) => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
-      navigate(`/room/${room.id}`);
+      navigate(`/room/${snapshot.room.slug}`);
     },
   });
 

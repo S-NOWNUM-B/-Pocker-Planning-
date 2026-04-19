@@ -32,6 +32,23 @@ class RoomRepository:
             )
         )
 
+    def get_room_by_slug(self, slug: str) -> Room | None:
+        return self.db.scalar(
+            select(Room)
+            .where(Room.slug == slug)
+            .execution_options(populate_existing=True)
+            .options(
+                selectinload(Room.deck_preset),
+                selectinload(Room.current_task),
+                selectinload(Room.participants).selectinload(RoomParticipant.user),
+                selectinload(Room.tasks),
+                selectinload(Room.invitation_links),
+            )
+        )
+
+    def slug_exists(self, slug: str) -> bool:
+        return self.db.scalar(select(func.count(Room.id)).where(Room.slug == slug)) > 0
+
     def get_room_for_user(self, room_id: UUID, user_id: UUID) -> Room | None:
         room = self.get_room(room_id)
         if room is None:

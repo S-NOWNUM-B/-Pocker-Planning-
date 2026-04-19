@@ -12,11 +12,13 @@
  * Доступна без авторизации. Основной вход для неавторизованных пользователей.
  */
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/app/providers';
 import { Button, Card, Input, PageShell, RadioGroup } from '@/shared/ui';
 import { LinkIcon, PlayIcon, TrophyIcon, UsersIcon } from '@/shared/ui/icons';
-import { createRoomId, type DeckType, type GameSession } from '@/shared/lib/poker';
+import { roomApi } from '@/entities/room';
+import { type DeckType, type GameSession, SESSION_STORAGE_KEY } from '@/shared/lib/poker';
 
 const DECK_INFO: Record<DeckType, { title: string; description: string }> = {
   fibonacci: {
@@ -31,30 +33,43 @@ const DECK_INFO: Record<DeckType, { title: string; description: string }> = {
 
 export function CreateRoomPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { user } = useSession();
   const [roomName, setRoomName] = useState('');
   const [deckType, setDeckType] = useState<DeckType>('fibonacci');
   const creatorName = user?.name?.trim() || 'Гость';
-  const creatorId = user?.id || 'guest';
 
   const canStart = Boolean(roomName.trim());
 
+  const createRoomMutation = useMutation({
+    mutationFn: () => roomApi.createRoom(roomName.trim(), deckType),
+    onSuccess: (snapshot) => {
+      const session: GameSession = {
+        roomId: snapshot.room.slug,
+        roomName: snapshot.room.name,
+        userName: creatorName,
+        deckType,
+        ownerId: snapshot.room.owner_id,
+        ownerName: creatorName,
+      };
+
+      window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+      queryClient.invalidateQueries({ queryKey: ['rooms'] });
+      navigate(`/room/${snapshot.room.slug}`);
+    },
+  });
+
   const handleStart = () => {
-    if (!canStart) {
+    if (!canStart || createRoomMutation.isPending) {
       return;
     }
 
-    const session: GameSession = {
-      roomId: createRoomId(roomName),
-      roomName: roomName.trim(),
-      userName: creatorName,
-      deckType,
-      ownerId: creatorId,
-      ownerName: creatorName,
-    };
+    if (!user) {
+      navigate('/login');
+      return;
+    }
 
-    window.localStorage.setItem('poker-planning:session', JSON.stringify(session));
-    navigate(`/room/${session.roomId}`);
+    createRoomMutation.mutate();
   };
 
   return (
@@ -123,6 +138,7 @@ export function CreateRoomPage() {
               placeholder="Sprint planning"
               value={roomName}
               onChange={(event) => setRoomName(event.target.value)}
+              disabled={createRoomMutation.isPending}
             />
 
             <RadioGroup
@@ -141,12 +157,17 @@ export function CreateRoomPage() {
             <Button
               type="button"
               onClick={handleStart}
-              disabled={!canStart}
+              disabled={!canStart || createRoomMutation.isPending}
               className="h-12 w-full text-base font-semibold"
             >
               <PlayIcon className="h-4 w-4" />
-              Начать игру
+              {createRoomMutation.isPending ? 'Создаём комнату...' : 'Начать игру'}
             </Button>
+            {createRoomMutation.isError && (
+              <p className="text-sm text-destructive">
+                Не удалось создать комнату. Проверьте авторизацию и попробуйте снова.
+              </p>
+            )}
           </div>
         </Card>
       </div>
