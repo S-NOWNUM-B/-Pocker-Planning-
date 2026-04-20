@@ -4,6 +4,43 @@
 import { Link } from 'react-router-dom';
 import { Button, Card, PageShell } from '@/shared/ui';
 
+const featureIcons = {
+  'Совместная оценка': (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 12a5 5 0 1 0 10 0a5 5 0 1 0-10 0" />
+      <path d="M4 20c1.7-2.8 4.1-4 8-4s6.3 1.2 8 4" />
+    </svg>
+  ),
+  'В реальном времени': (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 3v4" />
+      <path d="M12 17v4" />
+      <path d="M4.9 4.9l2.8 2.8" />
+      <path d="M16.3 16.3l2.8 2.8" />
+      <path d="M3 12h4" />
+      <path d="M17 12h4" />
+      <path d="M4.9 19.1l2.8-2.8" />
+      <path d="M16.3 7.7l2.8-2.8" />
+      <circle cx="12" cy="12" r="3.5" />
+    </svg>
+  ),
+  'Гибкие колоды': (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="5" y="6" width="10" height="14" rx="2" />
+      <path d="M9 4h8a2 2 0 0 1 2 2v12" />
+      <path d="M8 10h4" />
+      <path d="M8 14h6" />
+    </svg>
+  ),
+  'История сессий': (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 8v5l3 2" />
+      <path d="M12 3a9 9 0 1 0 9 9" />
+      <path d="M21 3v6h-6" />
+    </svg>
+  ),
+};
+
 export function OnboardingPage() {
   return (
     <PageShell maxWidth="full" className="min-h-[calc(100vh-8.5rem)]">
@@ -17,7 +54,7 @@ export function OnboardingPage() {
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
           Инструмент для честной и быстрой оценки задач. Устраните предвзятость, вовлеките каждого
-          участника и сделайте планирование прозрачным.
+          участника и сделайте планирование прозрачным
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Button as={Link} to="/create-room" size="lg">
@@ -36,7 +73,7 @@ export function OnboardingPage() {
             Всё необходимое для оценки
           </h2>
           <p className="mt-4 text-lg leading-8 text-muted-foreground">
-            Мы собрали лучшие практики Agile в одном простом и быстром интерфейсе.
+            Мы собрали лучшие практики Agile в одном простом и быстром интерфейсе
           </p>
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
@@ -45,22 +82,22 @@ export function OnboardingPage() {
               {
                 name: 'Совместная оценка',
                 description:
-                  'Вся команда оценивает задачи одновременно, что устраняет эффект «якорного» мнения.',
+                  'Вся команда оценивает задачи одновременно, что устраняет эффект «якорного» мнения',
               },
               {
                 name: 'В реальном времени',
                 description:
-                  'WebSocket-соединение обеспечивает мгновенную синхронизацию голосов между участниками.',
+                  'WebSocket-соединение обеспечивает мгновенную синхронизацию голосов между участниками',
               },
               {
                 name: 'Гибкие колоды',
                 description:
-                  'Поддержка Фибоначчи, T-shirt размеров и пользовательских колод под ваши нужды.',
+                  'Поддержка Фибоначчи, T-shirt размеров и пользовательских колод под ваши нужды',
               },
               {
                 name: 'История сессий',
                 description:
-                  'Все результаты сохраняются и доступны для ретроспективы и анализа в любое время.',
+                  'Все результаты сохраняются и доступны для ретроспективы и анализа в любое время',
               },
             ].map((feature) => (
               <Card
@@ -68,8 +105,8 @@ export function OnboardingPage() {
                 className="flex flex-col border border-border/70 bg-card/88 p-5 shadow-lg backdrop-blur"
               >
                 <dt className="text-base font-semibold leading-7 text-foreground">
-                  <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                    <div className="h-6 w-6 text-white" aria-hidden="true" />
+                  <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary shadow-sm">
+                    {featureIcons[feature.name as keyof typeof featureIcons]}
                   </div>
                   {feature.name}
                 </dt>
@@ -90,7 +127,7 @@ export function OnboardingPage() {
               Как это работает
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              Три простых шага к более точным оценкам в вашей команде.
+              Три простых шага к более точным оценкам в вашей команде
             </p>
           </div>
           <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-3">
@@ -98,7 +135,7 @@ export function OnboardingPage() {
               {
                 step: '1',
                 title: 'Создайте комнату',
-                description: 'Выберите колоду и поделитесь ссылкой с вашей командой.',
+                description: 'Выберите колоду и поделитесь ссылкой с вашей командой',
               },
               {
                 step: '2',
