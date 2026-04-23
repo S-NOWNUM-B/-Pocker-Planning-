@@ -48,7 +48,7 @@ export function RoomPage() {
   const refreshRoomData = async () => {
     await Promise.all([
       queryClient.invalidateQueries({
-        queryKey: ['room', roomRef, user?.id ?? 'guest', roomAccessToken ?? 'no-token'],
+        queryKey: ['room', resolvedRoomRef, user?.id ?? 'guest', roomAccessToken ?? 'no-token'],
       }),
       queryClient.invalidateQueries({ queryKey: ['rooms'] }),
       queryClient.invalidateQueries({ queryKey: ['room-history', roomId] }),

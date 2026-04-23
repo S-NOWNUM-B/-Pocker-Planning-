@@ -13,7 +13,7 @@ export function AboutPage() {
       <section className="flex flex-col items-center py-16 text-center lg:py-20">
         <h1 className="max-w-4xl font-display text-5xl font-bold tracking-tight text-foreground sm:text-7xl">
           Почему существует{' '}
-          <span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
+          <span className="inline-block whitespace-nowrap bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
             Pocker Planning
           </span>
         </h1>
@@ -88,6 +88,8 @@ export function AboutPage() {
                 'Расхождение оценок это сигнал неопределённости, а не ошибка команды',
                 'Цель раунда: общее понимание объёма и рисков, а не идеальная точность числа',
                 'Каждый участник должен иметь равный голос в финальном результате (даже если он не самый громкий в комнате)',
+                'Результат должен быть виден всем сразу, чтобы стимулировать обсуждение и обучение',
+                'Ритуал оценки должен быть простым и воспроизводимым',
               ].map((principle) => (
                 <div
                   key={principle}
