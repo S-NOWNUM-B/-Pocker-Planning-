@@ -1,6 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
-import { AuthLayout } from '@/app/layouts';
-import { AuthGuard, PublicOnlyGuard } from '@/app/router/guards';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { AuthLayout, RootLayout } from '@/app/layouts';
+import { authLoader, publicOnlyLoader } from './loaders';
+import { loginAction, registerAction } from './actions';
 import {
   OnboardingPage,
   CreateRoomPage,
@@ -15,59 +16,80 @@ import {
   NotFoundPage,
 } from '@/pages';
 
-export function AppRoutes() {
+function AuthLayoutWrapper() {
   return (
-    <Routes>
-      {/* Публичные маршруты */}
-      <Route path="/" element={<OnboardingPage />} />
-      <Route path="/create-room" element={<CreateRoomPage />} />
-      <Route path="/join-room" element={<JoinRoomPage />} />
-      <Route path="/invite/:token" element={<InvitePage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/room/:roomId" element={<RoomPage />} />
-
-      {/* Маршруты авторизации — доступны только неавторизованным */}
-      <Route
-        path="/login"
-        element={
-          <PublicOnlyGuard>
-            <AuthLayout>
-              <LoginPage />
-            </AuthLayout>
-          </PublicOnlyGuard>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <PublicOnlyGuard>
-            <AuthLayout>
-              <RegisterPage />
-            </AuthLayout>
-          </PublicOnlyGuard>
-        }
-      />
-
-      {/* Защищённые маршруты — доступны только авторизованным */}
-      <Route
-        path="/dashboard"
-        element={
-          <AuthGuard>
-            <DashboardPage />
-          </AuthGuard>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <AuthGuard>
-            <ProfilePage />
-          </AuthGuard>
-        }
-      />
-
-      {/* Запасной маршрут — 404 */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <AuthLayout>
+      <Outlet />
+    </AuthLayout>
   );
 }
+
+export const router = createBrowserRouter([
+  {
+    element: <RootLayout />,
+    children: [
+      {
+        path: '/',
+        element: <OnboardingPage />,
+      },
+      {
+        path: '/create-room',
+        element: <CreateRoomPage />,
+      },
+      {
+        path: '/join-room',
+        element: <JoinRoomPage />,
+      },
+      {
+        path: '/invite/:token',
+        element: <InvitePage />,
+      },
+      {
+        path: '/about',
+        element: <AboutPage />,
+      },
+      {
+        path: '/room/:roomId',
+        element: <RoomPage />,
+      },
+      {
+        path: '/login',
+        loader: publicOnlyLoader,
+        action: loginAction,
+        element: <AuthLayoutWrapper />,
+        children: [
+          {
+            index: true,
+            element: <LoginPage />,
+          },
+        ],
+      },
+      {
+        path: '/register',
+        loader: publicOnlyLoader,
+        action: registerAction,
+        element: <AuthLayoutWrapper />,
+        children: [
+          {
+            index: true,
+            element: <RegisterPage />,
+          },
+        ],
+      },
+      {
+        path: '/dashboard',
+        loader: authLoader,
+        element: <DashboardPage />,
+      },
+      {
+        path: '/profile',
+        loader: authLoader,
+        element: <ProfilePage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
+      },
+    ],
+  },
+]);

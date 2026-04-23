@@ -1,9 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Form, useActionData, useNavigation } from 'react-router-dom';
 import type { z } from 'zod';
-import { useSession } from '@/app/providers';
 import { Button, Input } from '@/shared/ui';
 import { LoginSchema, RegisterSchema } from '../../../model/schemas';
 import { PasswordInput } from '../../PasswordInput';
@@ -32,9 +31,8 @@ const registerDefaults = {
 };
 
 export function AuthForm({ mode }: AuthFormProps) {
-  const navigate = useNavigate();
-  const { login, register } = useSession();
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const navigation = useNavigation();
+  const actionData = useActionData() as { error?: string } | undefined;
 
   const schema = useMemo(() => (mode === 'login' ? LoginSchema : RegisterSchema), [mode]);
 
@@ -43,35 +41,11 @@ export function AuthForm({ mode }: AuthFormProps) {
     defaultValues: mode === 'login' ? loginDefaults : registerDefaults,
   });
 
-  const onSubmit = form.handleSubmit(async (values) => {
-    setSubmitError(null);
-
-    try {
-      if (mode === 'login') {
-        const loginValues = values as z.infer<typeof LoginSchema>;
-        await login(loginValues);
-      } else {
-        const registerValues = values as z.infer<typeof RegisterSchema>;
-        await register({
-          email: registerValues.email,
-          name: registerValues.name,
-          password: registerValues.password,
-        });
-      }
-
-      navigate('/dashboard', { replace: true });
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Произошла ошибка. Попробуйте ещё раз';
-      setSubmitError(message);
-    }
-  });
-
   const isRegister = mode === 'register';
-  const isSubmitting = form.formState.isSubmitting;
+  const isSubmitting = navigation.state === 'submitting';
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <Form method="post" className="space-y-4">
       <Input
         label="Email"
         type="email"
@@ -116,9 +90,9 @@ export function AuthForm({ mode }: AuthFormProps) {
         />
       )}
 
-      {submitError && (
+      {actionData?.error && (
         <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {submitError}
+          {actionData.error}
         </p>
       )}
 
@@ -135,6 +109,6 @@ export function AuthForm({ mode }: AuthFormProps) {
           {isRegister ? 'Войти' : 'Зарегистрироваться'}
         </Link>
       </p>
-    </form>
+    </Form>
   );
 }

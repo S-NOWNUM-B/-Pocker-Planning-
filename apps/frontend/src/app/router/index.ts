@@ -1,6 +1,6 @@
 /**
  * Экспорт маршрутизации приложения.
  *
- * AppRoutes — основной компонент с определением всех маршрутов (react-router-dom).
+ * router — объект роутера, созданный через createBrowserRouter (React Router Framework Mode).
  */
-export { AppRoutes } from './routes';
+export { router } from './routes';

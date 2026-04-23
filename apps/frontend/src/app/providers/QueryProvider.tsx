@@ -4,7 +4,6 @@
  * Оборачивает всё приложение в:
  *  - SessionProvider — управление состоянием авторизации и восстановление сессии
  *  - QueryClientProvider (TanStack Query) — для серверного состояния
- *  - BrowserRouter (react-router-dom) — для клиентской маршрутизации
  *
  * Используется в main.tsx как обёртка над <App />.
  *
@@ -12,7 +11,6 @@
  */
 import { type ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
 import { queryClient } from '@/shared/config';
 import { SessionProvider } from './SessionProvider';
 
@@ -23,9 +21,7 @@ interface AppProvidersProps {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <SessionProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>{children}</BrowserRouter>
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </SessionProvider>
   );
 }
