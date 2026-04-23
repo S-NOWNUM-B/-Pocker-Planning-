@@ -43,6 +43,52 @@ const isApiError = (error: unknown): error is ApiError => {
   );
 };
 
+const hasCyrillic = (text: string): boolean => /[А-Яа-яЁё]/.test(text);
+
+const getRussianCreateRoomErrorMessage = (error: unknown): string => {
+  const fallbackMessage = 'Не удалось создать комнату. Попробуйте ещё раз через несколько секунд.';
+
+  if (isApiError(error)) {
+    const originalMessage = (error.message || '').trim();
+    const normalized = originalMessage.toLowerCase();
+
+    if (
+      normalized.includes('network error') ||
+      normalized.includes('failed to fetch') ||
+      normalized.includes('cors')
+    ) {
+      return 'Сервер временно недоступен. Проверьте подключение и попробуйте снова.';
+    }
+
+    if (error.statusCode === 401 || error.statusCode === 403) {
+      return 'Недостаточно прав для создания комнаты. Обновите страницу и попробуйте снова.';
+    }
+
+    if (error.statusCode >= 500) {
+      return 'На сервере произошла ошибка. Попробуйте создать комнату чуть позже.';
+    }
+
+    if (originalMessage) {
+      return hasCyrillic(originalMessage) ? originalMessage : fallbackMessage;
+    }
+
+    return fallbackMessage;
+  }
+
+  if (error instanceof Error) {
+    const normalized = error.message.toLowerCase();
+    if (
+      normalized.includes('network error') ||
+      normalized.includes('failed to fetch') ||
+      normalized.includes('cors')
+    ) {
+      return 'Сервер временно недоступен. Проверьте подключение и попробуйте снова.';
+    }
+  }
+
+  return fallbackMessage;
+};
+
 export function CreateRoomPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -78,8 +124,14 @@ export function CreateRoomPage() {
       return { token: existingSession.roomAccessToken, guestName: existingSession.userName };
     }
 
-    const guestAuth = await loginAsGuest({ name: creatorName });
-    return { token: guestAuth.access_token, guestName: guestAuth.user.name };
+    try {
+      const guestAuth = await loginAsGuest({ name: creatorName });
+      return { token: guestAuth.access_token, guestName: guestAuth.user.name };
+    } catch {
+      // Fallback: backend guest-auth can fail independently (e.g. CORS/500),
+      // while room creation may still be available for public onboarding flow.
+      return {};
+    }
   };
 
   const createRoomMutation = useMutation({
@@ -115,7 +167,9 @@ export function CreateRoomPage() {
   };
 
   const mutationError = createRoomMutation.error;
-  const apiError: ApiError | null = isApiError(mutationError) ? mutationError : null;
+  const createRoomErrorMessage = createRoomMutation.isError
+    ? getRussianCreateRoomErrorMessage(mutationError)
+    : null;
 
   return (
     <PageShell
@@ -215,7 +269,7 @@ export function CreateRoomPage() {
             </Button>
             {createRoomMutation.isError && (
               <p className="text-sm text-destructive">
-                {apiError?.message || 'Не удалось создать комнату. Проверьте данные и попробуйте снова.'}
+                {createRoomErrorMessage}
               </p>
             )}
           </div>

@@ -10,7 +10,7 @@ export async function registerAction({ request }: { request: Request }) {
 
   try {
     const authData = await registerRequest({ email, password, name });
-    SessionManager.saveToken(authData.access_token);
+    SessionManager.saveToken(authData.access_token, authData.user);
     return redirect('/dashboard');
   } catch (error) {
     return {

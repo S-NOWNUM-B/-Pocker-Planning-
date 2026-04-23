@@ -10,7 +10,6 @@ import {
   LoginPage,
   RegisterPage,
   DashboardPage,
-  ProfilePage,
   AboutPage,
   RoomPage,
   NotFoundPage,
@@ -27,6 +26,7 @@ function AuthLayoutWrapper() {
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       {
         path: '/',
@@ -80,11 +80,6 @@ export const router = createBrowserRouter([
         path: '/dashboard',
         loader: authLoader,
         element: <DashboardPage />,
-      },
-      {
-        path: '/profile',
-        loader: authLoader,
-        element: <ProfilePage />,
       },
       {
         path: '*',

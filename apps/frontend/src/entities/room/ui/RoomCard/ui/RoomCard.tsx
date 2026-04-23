@@ -76,7 +76,7 @@ export function RoomCard({ room }: RoomCardProps) {
 
         {room.active_task_title && (
           <div className="rounded-md bg-muted/50 p-2 text-xs text-muted-foreground">
-            <span className="font-semibold">Текущая задача:</span> {room.active_task_title}
+            <span className="font-semibold">Последняя задача:</span> {room.active_task_title}
           </div>
         )}
       </div>
@@ -130,26 +130,12 @@ export function RoomCard({ room }: RoomCardProps) {
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <h4 className="text-sm font-semibold text-foreground">{item.task_title}</h4>
                   <span className="rounded-md bg-primary/15 px-2 py-0.5 text-xs font-semibold text-primary">
-                    Итог: {item.result_value}
+                    Итог: {item.result_value} SP
                   </span>
                 </div>
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <div className="mt-2 flex items-center justify-between gap-3 text-xs text-muted-foreground">
                   <span>Голосов: {item.votes_count}</span>
-                  <span>
-                    Среднее: {item.average_score !== null ? item.average_score : 'n/a'}
-                  </span>
-                  <span>{item.consensus ? 'Консенсус есть' : 'Без консенсуса'}</span>
-                  <span>{new Date(item.created_at).toLocaleString('ru-RU')}</span>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {Object.entries(item.distribution).map(([value, count]) => (
-                    <span
-                      key={`${item.id}-${value}`}
-                      className="rounded-md border border-border/70 bg-card px-2 py-1 text-xs text-foreground"
-                    >
-                      {value}: {count}
-                    </span>
-                  ))}
+                  <span>{new Date(item.created_at).toLocaleDateString('ru-RU')}</span>
                 </div>
               </div>
             ))}

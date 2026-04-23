@@ -9,7 +9,7 @@ export async function loginAction({ request }: { request: Request }) {
 
   try {
     const authData = await loginRequest({ email, password });
-    SessionManager.saveToken(authData.access_token);
+    SessionManager.saveToken(authData.access_token, authData.user);
     return redirect('/dashboard');
   } catch (error) {
     return {

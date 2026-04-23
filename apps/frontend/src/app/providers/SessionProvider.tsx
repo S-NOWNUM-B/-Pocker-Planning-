@@ -51,39 +51,56 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasRegisteredUsers, setHasRegisteredUsers] = useState(false);
 
+  const syncSession = async () => {
+    const token = SessionManager.getToken();
+
+    if (!token) {
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const currentUser = await getUserRequest();
+      setUser(currentUser);
+      setHasRegisteredUsers(true);
+    } catch {
+      SessionManager.removeToken({ notify: false });
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Инициализация сессии при загрузке приложения
   useEffect(() => {
-    const initializeSession = async () => {
-      try {
-        // Проверим, есть ли сохранённый токен
-        const token = SessionManager.getToken();
-        if (!token) {
-          setUser(null);
-          setIsLoading(false);
-          return;
-        }
+    void syncSession();
 
-        try {
-          const currentUser = await getUserRequest();
-          setUser(currentUser);
-          setHasRegisteredUsers(true);
-        } catch {
-          SessionManager.removeToken();
-          setUser(null);
-        }
-      } finally {
+    const handleSessionChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ user?: User | null }>).detail;
+
+      if (detail && 'user' in detail) {
+        setUser(detail.user ?? null);
+        setHasRegisteredUsers(Boolean(detail.user));
         setIsLoading(false);
+        return;
       }
+
+      void syncSession();
     };
 
-    initializeSession();
+    window.addEventListener(SessionManager.SESSION_CHANGE_EVENT, handleSessionChange);
+
+    return () => {
+      window.removeEventListener(SessionManager.SESSION_CHANGE_EVENT, handleSessionChange);
+    };
   }, []);
 
   // Вход в аккаунт — сохраняем токен и профиль
   const handleLogin = async (credentials: LoginCredentials) => {
     try {
       const authData = await loginRequest(credentials);
-      SessionManager.saveToken(authData.access_token);
+      SessionManager.saveToken(authData.access_token, authData.user);
       setUser(authData.user);
       setHasRegisteredUsers(true);
     } catch (error) {
@@ -95,7 +112,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const handleRegister = async (credentials: RegisterCredentials) => {
     try {
       const authData = await registerRequest(credentials);
-      SessionManager.saveToken(authData.access_token);
+      SessionManager.saveToken(authData.access_token, authData.user);
       setUser(authData.user);
       setHasRegisteredUsers(true);
     } catch (error) {

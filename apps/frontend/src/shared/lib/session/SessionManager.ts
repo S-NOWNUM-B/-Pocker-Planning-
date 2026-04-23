@@ -9,11 +9,21 @@
  */
 
 const TOKEN_KEY = 'access_token';
+const SESSION_CHANGE_EVENT = 'poker-planning:session-change';
+
+type SessionChangeDetail = {
+  user?: unknown;
+};
+
+function notifySessionChange(detail: SessionChangeDetail = {}) {
+  window.dispatchEvent(new CustomEvent(SESSION_CHANGE_EVENT, { detail }));
+}
 
 export const SessionManager = {
   // Сохранить токен в localStorage
-  saveToken: (token: string) => {
+  saveToken: (token: string, user?: unknown) => {
     localStorage.setItem(TOKEN_KEY, token);
+    notifySessionChange({ user });
   },
 
   // Получить токен из localStorage
@@ -27,7 +37,13 @@ export const SessionManager = {
   },
 
   // Удалить токен из localStorage (выход)
-  removeToken: () => {
+  removeToken: (options?: { notify?: boolean }) => {
     localStorage.removeItem(TOKEN_KEY);
+    if (options?.notify !== false) {
+      notifySessionChange({ user: null });
+    }
   },
+
+  // Событие для подписки на изменения сессии в UI
+  SESSION_CHANGE_EVENT,
 };

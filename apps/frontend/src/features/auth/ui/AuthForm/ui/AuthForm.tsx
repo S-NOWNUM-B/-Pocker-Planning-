@@ -43,9 +43,10 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   const isRegister = mode === 'register';
   const isSubmitting = navigation.state === 'submitting';
+  const submitAction = isRegister ? '/register' : '/login';
 
   return (
-    <Form method="post" className="space-y-4">
+    <Form method="post" action={submitAction} className="space-y-4">
       <Input
         label="Email"
         type="email"
