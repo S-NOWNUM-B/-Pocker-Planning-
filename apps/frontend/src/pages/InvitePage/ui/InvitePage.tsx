@@ -8,7 +8,15 @@ import { SESSION_STORAGE_KEY, type DeckType, type GameSession } from '@/shared/l
 import { useSession } from '@/app/providers';
 
 function normalizeDeckType(code: string | undefined): DeckType {
-  return code === 'even' ? 'even' : 'fibonacci';
+  if (code === 'even') {
+    return 'even';
+  }
+
+  if (code === 'tshirt') {
+    return 'tshirt';
+  }
+
+  return 'fibonacci';
 }
 
 export function InvitePage() {

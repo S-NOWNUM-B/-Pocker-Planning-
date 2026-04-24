@@ -17,20 +17,33 @@ import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/app/providers';
 import { loginAsGuest } from '@/entities/user';
 import type { ApiError } from '@/shared/api';
-import { Button, Card, Input, PageShell, RadioGroup } from '@/shared/ui';
+import { Button, Card, Input, PageShell } from '@/shared/ui';
 import { LinkIcon, PlayIcon, TrophyIcon, UsersIcon } from '@/shared/ui/icons';
 import { roomApi } from '@/entities/room';
-import { type DeckType, type GameSession, SESSION_STORAGE_KEY } from '@/shared/lib/poker';
+import { DECK_LABELS, type DeckType, type GameSession, SESSION_STORAGE_KEY } from '@/shared/lib/poker';
 
-const DECK_INFO: Record<DeckType, { title: string; description: string }> = {
-  fibonacci: {
-    title: 'Фибоначчи',
+const DECK_OPTIONS: Array<{ value: DeckType; title: string; description: string }> = [
+  {
+    value: 'fibonacci',
+    title: DECK_LABELS.fibonacci,
     description: '0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ?, ☕',
   },
-  even: {
-    title: 'Чётная',
+  {
+    value: 'even',
+    title: DECK_LABELS.even,
     description: '0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, ?, ☕',
   },
+  {
+    value: 'tshirt',
+    title: DECK_LABELS.tshirt,
+    description: 'XS, S, M, L, XL, XXL, ?, ☕',
+  },
+];
+
+const DECK_DETAILS: Record<DeckType, { title: string; description: string }> = {
+  fibonacci: DECK_OPTIONS[0],
+  even: DECK_OPTIONS[1],
+  tshirt: DECK_OPTIONS[2],
 };
 
 const isApiError = (error: unknown): error is ApiError => {
@@ -97,6 +110,7 @@ export function CreateRoomPage() {
   const [deckType, setDeckType] = useState<DeckType>('fibonacci');
   const creatorName = user?.name?.trim() || 'Гость';
   const trimmedRoomName = roomName.trim();
+  const selectedDeck = DECK_DETAILS[deckType];
 
   const isRoomNameValid = trimmedRoomName.length >= 3 && trimmedRoomName.length <= 120;
   const canStart = isRoomNameValid;
@@ -245,18 +259,30 @@ export function CreateRoomPage() {
               }
             />
 
-            <RadioGroup
-              label="Колода карт"
-              value={deckType}
-              onChange={setDeckType}
-              options={(
-                Object.entries(DECK_INFO) as Array<[DeckType, (typeof DECK_INFO)[DeckType]]>
-              ).map(([value, deck]) => ({
-                value,
-                title: deck.title,
-                description: deck.description,
-              }))}
-            />
+            <div className="space-y-2">
+              <label htmlFor="deck-type" className="text-sm font-medium text-muted-foreground">
+                Колода карт
+              </label>
+              <div className="rounded-2xl border border-border/70 bg-card/90 p-4 shadow-sm">
+                <select
+                  id="deck-type"
+                  value={deckType}
+                  onChange={(event) => setDeckType(event.target.value as DeckType)}
+                  className="w-full rounded-xl border border-border/70 bg-card px-4 py-3 text-sm font-medium text-foreground outline-none transition-colors focus:border-primary/60 focus:ring-2 focus:ring-ring/35"
+                >
+                  {DECK_OPTIONS.map((deck) => (
+                    <option key={deck.value} value={deck.value}>
+                      {deck.title}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="mt-3 rounded-xl border border-border/70 bg-secondary/35 p-3">
+                  <div className="text-sm font-semibold text-foreground">{selectedDeck.title}</div>
+                  <div className="mt-1 text-sm text-muted-foreground">{selectedDeck.description}</div>
+                </div>
+              </div>
+            </div>
 
             <Button
               type="button"

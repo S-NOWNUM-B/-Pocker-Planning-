@@ -26,7 +26,12 @@ export function persistRoomSession({
     userName,
     ownerId: snapshot.room.owner_id,
     ownerName: isOwner ? userName : 'Владелец комнаты',
-    deckType: snapshot.room.deck.code === 'even' ? 'even' : 'fibonacci',
+    deckType:
+      snapshot.room.deck.code === 'even'
+        ? 'even'
+        : snapshot.room.deck.code === 'tshirt'
+          ? 'tshirt'
+          : 'fibonacci',
     roomAccessToken,
     selfParticipantId: snapshot.self_participant_id,
   };

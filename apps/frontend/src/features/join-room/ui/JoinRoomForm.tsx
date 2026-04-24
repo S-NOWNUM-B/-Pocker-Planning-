@@ -19,7 +19,15 @@ import { Input, Button } from '@/shared/ui';
 import { SESSION_STORAGE_KEY, type DeckType, type GameSession } from '@/shared/lib/poker';
 
 function normalizeDeckType(code: string | undefined): DeckType {
-  return code === 'even' ? 'even' : 'fibonacci';
+  if (code === 'even') {
+    return 'even';
+  }
+
+  if (code === 'tshirt') {
+    return 'tshirt';
+  }
+
+  return 'fibonacci';
 }
 
 export function JoinRoomForm() {

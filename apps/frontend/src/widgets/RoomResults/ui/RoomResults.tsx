@@ -92,9 +92,9 @@ export function RoomResults({
                   <Button
                     type="button"
                     onClick={onResetRound}
-                    variant="ghost"
+                    variant="outline"
                     isLoading={isLoading}
-                    className="h-8 rounded-2xl px-5 text-sm font-semibold sm:h-9 sm:px-6 sm:text-base"
+                    className="h-8 rounded-2xl border-border/70 bg-card/90 px-5 text-sm font-semibold text-foreground shadow-sm hover:bg-card sm:h-9 sm:px-6 sm:text-base"
                   >
                     Переголосовать
                   </Button>

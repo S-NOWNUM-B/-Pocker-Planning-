@@ -2,7 +2,7 @@
  * Доменная логика и типы Planning Poker.
  *
  * Определяет:
- *  - DeckType — тип колоды ('fibonacci' | 'even')
+ *  - DeckType — тип колоды ('fibonacci' | 'even' | 'tshirt')
  *  - Theme — тема оформления ('light' | 'dark')
  *  - Player — игрок с голосом и статусом
  *  - Task — задача с оценкой
@@ -11,7 +11,7 @@
  *  - createRoomId() — генерация ID комнаты из названия
  *  - getAverageVote() — подсчёт среднего значения голосов
  */
-export type DeckType = 'fibonacci' | 'even';
+export type DeckType = 'fibonacci' | 'even' | 'tshirt';
 
 export type Theme = 'light' | 'dark';
 
@@ -45,7 +45,26 @@ export interface GameSession {
 export const DECKS: Record<DeckType, string[]> = {
   fibonacci: ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?', '☕'],
   even: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '?', '☕'],
+  tshirt: ['XS', 'S', 'M', 'L', 'XL', 'XXL', '?', '☕'],
 };
+
+export const DECK_LABELS: Record<DeckType, string> = {
+  fibonacci: 'Фибоначчи',
+  even: 'Чётная',
+  tshirt: 'Футболки',
+};
+
+export function getDeckLabel(deckType: string | undefined): string {
+  if (deckType === 'even') {
+    return DECK_LABELS.even;
+  }
+
+  if (deckType === 'tshirt') {
+    return DECK_LABELS.tshirt;
+  }
+
+  return DECK_LABELS.fibonacci;
+}
 
 export const SESSION_STORAGE_KEY = 'poker-planning:session';
 

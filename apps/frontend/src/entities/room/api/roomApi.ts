@@ -12,6 +12,7 @@
  * Типы данных: RoomState, RoomDetails из entities/room/model/types.
  */
 import { api } from '@/shared/api';
+import type { DeckType } from '@/shared/lib/poker';
 import type { RoomState, RoomDetails, RoomListItem, RoomSnapshot } from '../model/types';
 
 const withToken = (authToken?: string) => {
@@ -44,7 +45,7 @@ export const roomApi = {
 
   createRoom: async (
     name: string,
-    deckPresetCode: 'fibonacci' | 'even' = 'fibonacci',
+    deckPresetCode: DeckType = 'fibonacci',
     authToken?: string,
   ): Promise<RoomSnapshot> => {
     const { data } = await api.post('/rooms', { name, deck_preset_code: deckPresetCode }, withToken(authToken));

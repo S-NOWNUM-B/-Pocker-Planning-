@@ -21,6 +21,7 @@ import { getLocalSession, loadRoomSnapshotWithToken, roomRefLooksLikeCode } from
 import { persistRoomSession } from '@/shared/lib/session/persistRoomSession';
 import { SessionManager } from '@/shared/lib/session';
 import { useRoomWebSocket } from '@/shared/lib/hooks';
+import { getDeckLabel } from '@/shared/lib/poker';
 import { ParticipantsList, RoomFooter, RoomHeader, RoomHistory, RoomResults, TaskSidebar } from '@/widgets';
 import { useRoomParams } from '../lib/useRoomParams';
 
@@ -451,7 +452,7 @@ export function RoomPage() {
       <RoomHeader
         roomName={snapshot.room.name}
         roomId={snapshot.room.slug}
-        deckName={snapshot.room.deck.code === 'even' ? 'Чётная' : 'Фибоначчи'}
+        deckName={getDeckLabel(snapshot.room.deck.code)}
         inviteLink={snapshot.room.invite_link}
         onShowHistory={() => setIsHistoryOpen(true)}
       />
