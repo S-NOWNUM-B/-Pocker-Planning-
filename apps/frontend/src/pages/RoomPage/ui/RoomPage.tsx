@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Navigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useSession } from '@/app/providers';
 import { roomApi } from '@/entities/room';
 import {
@@ -76,12 +77,24 @@ export function RoomPage() {
 
   const createTaskMutation = useMutation({
     mutationFn: (title: string) => roomApi.createTask(roomId as string, title, roomAccessToken),
-    onSuccess: refreshRoomData,
+    onSuccess: () => {
+      refreshRoomData();
+      toast.success('Задача добавлена');
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Не удалось добавить задачу');
+    },
   });
 
   const deleteTaskMutation = useMutation({
     mutationFn: (taskId: string) => roomApi.deleteTask(roomId as string, taskId, roomAccessToken),
-    onSuccess: refreshRoomData,
+    onSuccess: () => {
+      refreshRoomData();
+      toast.success('Задача удалена');
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Не удалось удалить задачу');
+    },
   });
 
   const selectTaskMutation = useMutation({
@@ -97,17 +110,35 @@ export function RoomPage() {
   const voteMutation = useMutation({
     mutationFn: ({ roundId, value }: { roundId: string; value: string }) =>
       roomApi.submitVote(roomId as string, roundId, value, roomAccessToken),
-    onSuccess: refreshRoomData,
+    onSuccess: () => {
+      refreshRoomData();
+      toast.success('Голос принят');
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Не удалось отправить голос');
+    },
   });
 
   const revealMutation = useMutation({
     mutationFn: (roundId: string) => roomApi.revealRound(roomId as string, roundId, roomAccessToken),
-    onSuccess: refreshRoomData,
+    onSuccess: () => {
+      refreshRoomData();
+      toast.success('Карты раскрыты');
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Не удалось раскрыть карты');
+    },
   });
 
   const resetRoundMutation = useMutation({
     mutationFn: (roundId: string) => roomApi.resetRound(roomId as string, roundId, roomAccessToken),
-    onSuccess: refreshRoomData,
+    onSuccess: () => {
+      refreshRoomData();
+      toast.success('Раунд сброшен, голосуйте заново');
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Не удалось сбросить раунд');
+    },
   });
 
   const finalizeMutation = useMutation({

@@ -16,6 +16,7 @@
  */
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useTheme } from '@/shared/lib/hooks';
 import { Button, Card, Switch } from '@/shared/ui';
 import { LinkIcon, LogOutIcon, MoonIcon, SunIcon, TrophyIcon, UsersIcon } from '@/shared/ui/icons';
@@ -33,12 +34,33 @@ export function RoomHeader({ roomName, roomId, deckName, inviteLink }: RoomHeade
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
 
   const handleCopyLink = async () => {
+    const textToCopy = inviteLink || window.location.href;
+
     try {
-      await navigator.clipboard.writeText(inviteLink || window.location.href);
+      // Современный API
+      await navigator.clipboard.writeText(textToCopy);
       setCopyState('copied');
+      toast.success('Ссылка скопирована');
       window.setTimeout(() => setCopyState('idle'), 1800);
     } catch {
-      return;
+      // Fallback для старых браузеров
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = textToCopy;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        textArea.remove();
+        setCopyState('copied');
+        toast.success('Ссылка скопирована');
+        window.setTimeout(() => setCopyState('idle'), 1800);
+      } catch {
+        toast.error('Не удалось скопировать ссылку');
+      }
     }
   };
 
