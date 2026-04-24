@@ -22,7 +22,7 @@ import { getLocalSession, loadRoomSnapshotWithToken, roomRefLooksLikeCode } from
 import { persistRoomSession } from '@/shared/lib/session/persistRoomSession';
 import { SessionManager } from '@/shared/lib/session';
 import { useRoomWebSocket } from '@/shared/lib/hooks';
-import { ParticipantsList, RoomFooter, RoomHeader, RoomResults, TaskSidebar } from '@/widgets';
+import { ParticipantsList, RoomFooter, RoomHeader, RoomHistory, RoomResults, TaskSidebar } from '@/widgets';
 import { useRoomParams } from '../lib/useRoomParams';
 
 export function RoomPage() {
@@ -31,12 +31,27 @@ export function RoomPage() {
   const queryClient = useQueryClient();
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [resolvedRoomRef, setResolvedRoomRef] = useState(roomRef);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const localSession = getLocalSession();
   const roomAccessToken = user ? undefined : localSession?.roomAccessToken;
 
   useEffect(() => {
     setResolvedRoomRef(roomRef);
   }, [roomRef]);
+
+  // Подтверждение при выходе из комнаты
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const roomQuery = useQuery({
     queryKey: ['room', resolvedRoomRef, user?.id ?? 'guest', roomAccessToken ?? 'no-token'],
@@ -315,6 +330,7 @@ export function RoomPage() {
         roomId={snapshot.room.slug}
         deckName={snapshot.room.deck.code === 'even' ? 'Чётная' : 'Фибоначчи'}
         inviteLink={snapshot.room.invite_link}
+        onShowHistory={() => setIsHistoryOpen(true)}
       />
 
       <main className="relative mx-auto grid w-full max-w-7xl min-h-0 flex-1 gap-3 overflow-y-auto px-4 py-3 pb-4 sm:px-6 sm:py-4 sm:pb-5 lg:grid-cols-[20rem_minmax(0,1fr)] lg:overflow-visible lg:px-8">
@@ -374,6 +390,12 @@ export function RoomPage() {
         onSelectCard={(card) => {
           void handleSelectCard(card);
         }}
+      />
+
+      <RoomHistory
+        history={snapshot.history}
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
       />
     </div>
   );

@@ -26,9 +26,10 @@ interface RoomHeaderProps {
   roomId: string;
   deckName: string;
   inviteLink?: string | null;
+  onShowHistory?: () => void;
 }
 
-export function RoomHeader({ roomName, roomId, deckName, inviteLink }: RoomHeaderProps) {
+export function RoomHeader({ roomName, roomId, deckName, inviteLink, onShowHistory }: RoomHeaderProps) {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
@@ -92,6 +93,32 @@ export function RoomHeader({ roomName, roomId, deckName, inviteLink }: RoomHeade
         </div>
 
         <div className="flex items-center gap-2">
+          {onShowHistory && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onShowHistory}
+              className="h-10 px-4"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M3 3v5h5" />
+                <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
+                <path d="M12 7v5l4 2" />
+              </svg>
+              <span className="hidden sm:inline">История</span>
+            </Button>
+          )}
           <Button
             type="button"
             variant="outline"
