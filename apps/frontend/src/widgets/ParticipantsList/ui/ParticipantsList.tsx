@@ -9,23 +9,21 @@
  *    «✓» (проголосовал, скрыто), значение карты (если раскрыто)
  *
  * @param players — массив игроков
- * @param hasActiveTask — выбрана ли сейчас задача для оценки
  * @param isRevealed — раскрыты ли результаты
  * @param className — дополнительный CSS-класс
  */
 import { Card } from '@/shared/ui';
-import { CheckIcon, CoffeeIcon, HelpCircleIcon, TargetIcon } from '@/shared/ui/icons';
+import { CheckIcon, CoffeeIcon, HelpCircleIcon } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib';
 import type { Player } from '@/shared/lib/poker';
 
 interface ParticipantsListProps {
   players: Player[];
-  hasActiveTask: boolean;
   isRevealed: boolean;
   className?: string;
 }
 
-export function ParticipantsList({ players, hasActiveTask, isRevealed, className }: ParticipantsListProps) {
+export function ParticipantsList({ players, isRevealed, className }: ParticipantsListProps) {
   if (players.length === 0) {
     return null;
   }
@@ -62,16 +60,13 @@ export function ParticipantsList({ players, hasActiveTask, isRevealed, className
           {players.map((player) => {
             const hasVote = player.vote !== null;
             const voteIsVisible = isRevealed && hasVote;
-            const isWaitingForTask = !hasActiveTask;
 
             return (
               <div
                 key={player.id}
                 className={cn(
-                  'flex min-w-9.5rem items-center gap-2 rounded-xl border px-2 py-1.5 transition-colors',
-                  player.isOnline
-                    ? 'border-primary/70 bg-card/95 shadow-[0_0_0_1px_rgba(220,38,38,0.16)]'
-                    : 'border-border/40 bg-secondary/15 opacity-65',
+                  'flex min-w-9.5rem items-center gap-2 rounded-xl border border-primary/70 bg-card/95 px-2 py-1.5 shadow-[0_0_0_1px_rgba(220,38,38,0.16)] transition-colors',
+                  !player.isOnline && 'opacity-85',
                 )}
               >
                 <div className="relative">
@@ -101,26 +96,20 @@ export function ParticipantsList({ players, hasActiveTask, isRevealed, className
                       ? 'border-primary/55 bg-primary/10 text-primary'
                       : hasVote
                         ? 'border-primary bg-primary text-primary-foreground shadow-sm'
-                        : isWaitingForTask
-                          ? 'border-border bg-card/70 text-muted-foreground'
-                          : 'border-primary/45 bg-primary/8 text-primary'
+                        : 'border-primary/45 bg-primary/8 text-primary'
                   }`}
                   aria-label={`Голос ${player.name}: ${
                     voteIsVisible
                       ? player.vote
                       : hasVote
                         ? 'проголосовал'
-                        : isWaitingForTask
-                          ? 'вопрос не выбран'
-                          : 'ожидает оценки'
+                        : 'ожидает оценки'
                   }`}
                 >
                   {voteIsVisible ? (
                     renderVisibleVote(player.vote as string)
                   ) : hasVote ? (
                     <CheckIcon className="h-3.5 w-3.5" />
-                  ) : isWaitingForTask ? (
-                    <TargetIcon className="h-3.5 w-3.5" />
                   ) : (
                     '...'
                   )}

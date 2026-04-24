@@ -509,7 +509,6 @@ export function RoomPage() {
 
           <ParticipantsList
             players={players}
-            hasActiveTask={activeTask !== null}
             isRevealed={isRevealed}
             className="self-start h-auto min-h-5.5rem"
           />
