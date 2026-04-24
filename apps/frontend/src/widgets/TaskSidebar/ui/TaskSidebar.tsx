@@ -31,6 +31,7 @@ interface TaskSidebarProps {
   onNewTaskTitleChange: (value: string) => void;
   onAddTask: () => void;
   onSelectTask: (taskId: string) => void;
+  onDeleteTask?: (taskId: string) => void;
   className?: string;
 }
 
@@ -42,6 +43,7 @@ export function TaskSidebar({
   onNewTaskTitleChange,
   onAddTask,
   onSelectTask,
+  onDeleteTask,
   className,
 }: TaskSidebarProps) {
   return (
@@ -68,28 +70,60 @@ export function TaskSidebar({
             const isActive = task.id === activeTaskId;
 
             return (
-              <Button
-                key={task.id}
-                type="button"
-                onClick={() => !isRevealed && onSelectTask(task.id)}
-                variant="ghost"
-                className={`w-full border p-3 text-left ${
-                  isActive
-                    ? 'border-primary/70 bg-primary/12 shadow-sm'
-                    : task.estimate
-                      ? 'border-border bg-secondary/45 text-muted-foreground'
-                      : 'border-border/80 bg-card/80 hover:border-primary/50 hover:bg-card'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <span className="line-clamp-2 text-sm font-medium">{task.title}</span>
-                  {task.estimate && (
-                    <span className="shrink-0 rounded-lg bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
-                      {task.estimate} SP
-                    </span>
-                  )}
-                </div>
-              </Button>
+              <div key={task.id} className="group relative">
+                <Button
+                  type="button"
+                  onClick={() => !isRevealed && onSelectTask(task.id)}
+                  variant="ghost"
+                  className={`w-full border p-3 text-left ${
+                    isActive
+                      ? 'border-primary/70 bg-primary/12 shadow-sm'
+                      : task.estimate
+                        ? 'border-border bg-secondary/45 text-muted-foreground'
+                        : 'border-border/80 bg-card/80 hover:border-primary/50 hover:bg-card'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="line-clamp-2 text-sm font-medium">{task.title}</span>
+                    <div className="flex items-center gap-1.5">
+                      {task.estimate && (
+                        <span className="shrink-0 rounded-lg bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
+                          {task.estimate} SP
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Button>
+                {onDeleteTask && !task.estimate && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm(`Удалить задачу "${task.title}"?`)) {
+                        onDeleteTask(task.id);
+                      }
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                    title="Удалить задачу"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 6h18" />
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             );
           })
         )}

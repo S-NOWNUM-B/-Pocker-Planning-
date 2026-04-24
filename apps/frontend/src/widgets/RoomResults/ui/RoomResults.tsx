@@ -27,6 +27,7 @@ interface RoomResultsProps {
   anyPlayerVoted: boolean;
   onReveal: () => void;
   onNextTask: () => void;
+  onResetRound?: () => void;
   className?: string;
 }
 
@@ -38,6 +39,7 @@ export function RoomResults({
   anyPlayerVoted,
   onReveal,
   onNextTask,
+  onResetRound,
   className,
 }: RoomResultsProps) {
   const hasActiveTask = Boolean(activeTaskTitle);
@@ -83,13 +85,25 @@ export function RoomResults({
                 </div>
               </Card>
 
-              <Button
-                type="button"
-                onClick={onNextTask}
-                className="h-8 rounded-2xl px-5 text-sm font-semibold sm:h-9 sm:px-6 sm:text-base"
-              >
-                Следующая задача
-              </Button>
+              <div className="flex gap-2">
+                {onResetRound && (
+                  <Button
+                    type="button"
+                    onClick={onResetRound}
+                    variant="ghost"
+                    className="h-8 rounded-2xl px-5 text-sm font-semibold sm:h-9 sm:px-6 sm:text-base"
+                  >
+                    Переголосовать
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  onClick={onNextTask}
+                  className="h-8 rounded-2xl px-5 text-sm font-semibold sm:h-9 sm:px-6 sm:text-base"
+                >
+                  Следующая задача
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3 text-center">

@@ -79,6 +79,11 @@ export function RoomPage() {
     onSuccess: refreshRoomData,
   });
 
+  const deleteTaskMutation = useMutation({
+    mutationFn: (taskId: string) => roomApi.deleteTask(roomId as string, taskId, roomAccessToken),
+    onSuccess: refreshRoomData,
+  });
+
   const selectTaskMutation = useMutation({
     mutationFn: (taskId: string) => roomApi.selectTask(roomId as string, taskId, roomAccessToken),
     onSuccess: refreshRoomData,
@@ -97,6 +102,11 @@ export function RoomPage() {
 
   const revealMutation = useMutation({
     mutationFn: (roundId: string) => roomApi.revealRound(roomId as string, roundId, roomAccessToken),
+    onSuccess: refreshRoomData,
+  });
+
+  const resetRoundMutation = useMutation({
+    mutationFn: (roundId: string) => roomApi.resetRound(roomId as string, roundId, roomAccessToken),
     onSuccess: refreshRoomData,
   });
 
@@ -152,10 +162,12 @@ export function RoomPage() {
 
   const isBusy =
     createTaskMutation.isPending ||
+    deleteTaskMutation.isPending ||
     selectTaskMutation.isPending ||
     startRoundMutation.isPending ||
     voteMutation.isPending ||
     revealMutation.isPending ||
+    resetRoundMutation.isPending ||
     finalizeMutation.isPending;
 
   const handleSelectCard = async (card: string) => {
@@ -177,6 +189,18 @@ export function RoomPage() {
       isBusy,
       revealRound: (roundId) => revealMutation.mutateAsync(roundId),
     });
+  };
+
+  const handleResetRound = async () => {
+    if (!isOwner || isBusy || !snapshot.active_round) {
+      return;
+    }
+
+    try {
+      await resetRoundMutation.mutateAsync(snapshot.active_round.id);
+    } catch (error) {
+      console.error('Failed to reset round:', error);
+    }
   };
 
   const handleNextTask = async () => {
@@ -213,6 +237,18 @@ export function RoomPage() {
     });
   };
 
+  const handleDeleteTask = async (taskId: string) => {
+    if (!isOwner || isBusy) {
+      return;
+    }
+
+    try {
+      await deleteTaskMutation.mutateAsync(taskId);
+    } catch (error) {
+      console.error('Failed to delete task:', error);
+    }
+  };
+
   return (
     <div className="relative flex h-screen flex-col overflow-hidden">
       <div className="pointer-events-none absolute -left-24 top-20 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
@@ -234,6 +270,7 @@ export function RoomPage() {
           onNewTaskTitleChange={setNewTaskTitle}
           onAddTask={handleAddTask}
           onSelectTask={handleSelectTask}
+          onDeleteTask={isOwner ? handleDeleteTask : undefined}
           className="h-auto min-h-0 lg:h-full lg:max-h-full"
         />
 
@@ -259,6 +296,7 @@ export function RoomPage() {
             anyPlayerVoted={anyPlayerVoted}
             onReveal={handleReveal}
             onNextTask={handleNextTask}
+            onResetRound={isOwner ? handleResetRound : undefined}
             className="h-auto min-h-48 lg:h-full"
           />
 

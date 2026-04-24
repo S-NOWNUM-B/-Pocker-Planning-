@@ -52,6 +52,7 @@ export function getRoomVotingView(snapshot: RoomSnapshot, tasks: Task[]) {
   const anyPlayerVoted = snapshot.active_round !== null ? snapshot.active_round.votes_submitted > 0 : false;
   const selectedCard = snapshot.active_round?.self_vote_value ?? null;
   const average = toAverageLabel(snapshot.active_round?.average_score);
+  const activeRoundId = snapshot.active_round?.id ?? null;
 
   return {
     activeTaskId,
@@ -61,5 +62,6 @@ export function getRoomVotingView(snapshot: RoomSnapshot, tasks: Task[]) {
     anyPlayerVoted,
     selectedCard,
     average,
+    activeRoundId,
   };
 }

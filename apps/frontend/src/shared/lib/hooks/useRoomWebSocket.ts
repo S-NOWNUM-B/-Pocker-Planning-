@@ -53,6 +53,7 @@ export function useRoomWebSocket({
         case 'vote.submitted':
         case 'round.revealed':
         case 'round.finalized':
+        case 'round.reset':
         case 'room.snapshot':
           invalidateRoomQueries();
           break;
