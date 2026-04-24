@@ -19,6 +19,8 @@ import { NotFoundPage } from '@/pages/NotFoundPage';
 import { Card, Spinner } from '@/shared/ui';
 import { getLocalSession, loadRoomSnapshotWithToken, roomRefLooksLikeCode } from '@/shared/lib/room';
 import { persistRoomSession } from '@/shared/lib/session/persistRoomSession';
+import { SessionManager } from '@/shared/lib/session';
+import { useRoomWebSocket } from '@/shared/lib/hooks';
 import { ParticipantsList, RoomFooter, RoomHeader, RoomResults, TaskSidebar } from '@/widgets';
 import { useRoomParams } from '../lib/useRoomParams';
 
@@ -39,11 +41,28 @@ export function RoomPage() {
     queryKey: ['room', resolvedRoomRef, user?.id ?? 'guest', roomAccessToken ?? 'no-token'],
     enabled: Boolean(user || roomAccessToken),
     queryFn: () => loadRoomSnapshotWithToken(resolvedRoomRef, roomAccessToken),
-    refetchInterval: 4000,
+    refetchInterval: (query) => {
+      // Fallback на polling если WebSocket не подключен
+      const snapshot = query.state.data;
+      return snapshot ? 10000 : 4000;
+    },
   });
 
   const snapshot = roomQuery.data;
   const roomId = snapshot?.room.id;
+
+  // Получаем JWT токен для WebSocket
+  const wsToken = user ? SessionManager.getToken() : roomAccessToken;
+  const canConnectWs = Boolean(roomId && wsToken);
+
+  // Подключаем WebSocket
+  const { isConnected: wsConnected } = useRoomWebSocket({
+    roomId: roomId || '',
+    roomRef: resolvedRoomRef,
+    token: wsToken || '',
+    userId: user?.id ?? 'guest',
+    enabled: canConnectWs,
+  });
 
   const refreshRoomData = async () => {
     await Promise.all([

@@ -14,30 +14,43 @@
  * @param autoConnect — подключаться автоматически, по умолчанию true
  * @returns { sendMessage, disconnect, isConnected }
  */
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 
 interface UseWebSocketOptions<T> {
   url: string;
   onMessage: (data: T) => void;
+  onError?: (error: Event) => void;
   reconnectInterval?: number;
+  maxReconnectAttempts?: number;
   autoConnect?: boolean;
 }
 
 export function useWebSocket<T>({
   url,
   onMessage,
+  onError,
   reconnectInterval = 3000,
+  maxReconnectAttempts = 10,
   autoConnect = true,
 }: UseWebSocketOptions<T>) {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const reconnectAttemptsRef = useRef(0);
+  const [isConnected, setIsConnected] = useState(false);
 
   const connect = useCallback(() => {
+    if (reconnectAttemptsRef.current >= maxReconnectAttempts) {
+      console.error('Max WebSocket reconnect attempts reached');
+      return;
+    }
+
     const ws = new WebSocket(url);
     wsRef.current = ws;
 
     ws.onopen = () => {
       console.log('WebSocket connected');
+      setIsConnected(true);
+      reconnectAttemptsRef.current = 0;
     };
 
     ws.onmessage = (event) => {
@@ -51,13 +64,22 @@ export function useWebSocket<T>({
 
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
+      setIsConnected(false);
+      onError?.(error);
     };
 
     ws.onclose = () => {
-      console.log('WebSocket disconnected, reconnecting...');
-      reconnectTimeoutRef.current = setTimeout(connect, reconnectInterval);
+      console.log('WebSocket disconnected');
+      setIsConnected(false);
+
+      if (reconnectAttemptsRef.current < maxReconnectAttempts) {
+        reconnectAttemptsRef.current += 1;
+        const delay = Math.min(reconnectInterval * Math.pow(2, reconnectAttemptsRef.current - 1), 30000);
+        console.log(`Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
+        reconnectTimeoutRef.current = setTimeout(connect, delay);
+      }
     };
-  }, [url, onMessage, reconnectInterval]);
+  }, [url, onMessage, onError, reconnectInterval, maxReconnectAttempts]);
 
   const disconnect = useCallback(() => {
     if (reconnectTimeoutRef.current) {
@@ -67,6 +89,7 @@ export function useWebSocket<T>({
       wsRef.current.close();
       wsRef.current = null;
     }
+    setIsConnected(false);
   }, []);
 
   useEffect(() => {
@@ -84,5 +107,5 @@ export function useWebSocket<T>({
     }
   }, []);
 
-  return { sendMessage, disconnect, isConnected: wsRef.current?.readyState === WebSocket.OPEN };
+  return { sendMessage, disconnect, isConnected };
 }
