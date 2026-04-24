@@ -492,42 +492,6 @@ colors: {
 bg-online
 ```
 
----
-
-## 📝 Toast-уведомления
-
-### Проблема
-Toast-уведомления используются консистентно, но есть дублирование текстов ошибок.
-
-### Текущее состояние
-✅ Все toast используют `toast.success()` и `toast.error()`
-✅ Единый формат сообщений об ошибках: `error?.message || 'Не удалось ...'`
-
-### Рекомендация
-Создать константы для сообщений:
-```typescript
-// src/shared/lib/constants/toastMessages.ts
-export const TOAST_MESSAGES = {
-  TASK_ADDED: 'Задача добавлена',
-  TASK_UPDATED: 'Задача обновлена',
-  TASK_DELETED: 'Задача удалена',
-  VOTE_SUBMITTED: 'Голос принят',
-  CARDS_REVEALED: 'Карты раскрыты',
-  ROUND_RESET: 'Раунд сброшен, голосуйте заново',
-  LINK_COPIED: 'Ссылка скопирована',
-  
-  ERROR_TASK_ADD: 'Не удалось добавить задачу',
-  ERROR_TASK_UPDATE: 'Не удалось обновить задачу',
-  ERROR_TASK_DELETE: 'Не удалось удалить задачу',
-  ERROR_VOTE_SUBMIT: 'Не удалось отправить голос',
-  ERROR_CARDS_REVEAL: 'Не удалось раскрыть карты',
-  ERROR_ROUND_RESET: 'Не удалось сбросить раунд',
-  ERROR_LINK_COPY: 'Не удалось скопировать ссылку',
-} as const;
-```
-
----
-
 ## 🔢 Магические числа
 
 ### Проблема
@@ -575,7 +539,7 @@ import { VALIDATION } from '@/shared/lib/constants/validation';
 ### Рекомендуемый порядок
 
 1. React и хуки
-2. Сторонние библиотеки (react-router, tanstack-query, sonner)
+2. Сторонние библиотеки (react-router, tanstack-query)
 3. Внутренние модули (@/app, @/entities, @/features)
 4. UI-компоненты (@/shared/ui)
 5. Утилиты и типы (@/shared/lib)
@@ -590,7 +554,6 @@ import { useEffect, useState } from 'react';
 // 2. Сторонние библиотеки
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Navigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 // 3. Внутренние модули
 import { useSession } from '@/app/providers';
@@ -634,7 +597,6 @@ import { useRoomParams } from '../lib/useRoomParams';
   - [ ] `RoomPage.tsx` (Spinner)
 
 ### 🟡 Средний приоритет (константы и стандартизация)
-- [ ] Создать константы для toast-сообщений в `src/shared/lib/constants/toastMessages.ts`
 - [ ] Создать константы валидации в `src/shared/lib/constants/validation.ts`
 - [ ] Заменить магические числа на константы в `TaskSidebar.tsx`
 - [ ] Унифицировать высоту кнопок в `RoomResults.tsx`
@@ -659,10 +621,6 @@ import { useRoomParams } from '../lib/useRoomParams';
 - Кастомные `<span>` вместо `Badge`: 2 места
 - `window.confirm` вместо `Modal`: 1 место
 
-**Всего toast-уведомлений:** 16
-- Success: 8
-- Error: 8
-
 **Магические числа:** 6 вхождений (240, 200, 220)
 
 **Компоненты, требующие создания:**
@@ -685,7 +643,7 @@ import { useRoomParams } from '../lib/useRoomParams';
    - Убрать inline SVG из компонентов
    - Создать недостающие иконки: `EditIcon`, `TrashIcon`, `HistoryIcon`
 
-3. **Приоритет 3 (Средний):** Вынести константы (toast-сообщения, лимиты валидации)
+3. **Приоритет 3 (Средний):** Вынести константы лимитов валидации
    - Упростит поддержку и локализацию в будущем
 
 4. **Приоритет 4 (Низкий):** Стандартизировать размеры кнопок, цветовые схемы, порядок импортов

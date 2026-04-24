@@ -70,7 +70,7 @@ export function ParticipantsList({ players, hasActiveTask, isRevealed, className
                 className={cn(
                   'flex min-w-9.5rem items-center gap-2 rounded-xl border px-2 py-1.5',
                   player.isOnline
-                    ? 'border-border/80 bg-secondary/35'
+                    ? 'border-primary/35 bg-card/95 shadow-sm'
                     : 'border-border/40 bg-secondary/15 opacity-60',
                 )}
               >
@@ -91,7 +91,7 @@ export function ParticipantsList({ players, hasActiveTask, isRevealed, className
                     {player.name}
                   </div>
                   {player.role ? (
-                    <div className="text-[0.65rem] text-muted-foreground">{player.role}</div>
+                    <div className="text-[0.65rem] text-foreground/75">{player.role}</div>
                   ) : null}
                 </div>
 

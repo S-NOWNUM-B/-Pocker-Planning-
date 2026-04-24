@@ -16,7 +16,6 @@
  */
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 import { useTheme } from '@/shared/lib/hooks';
 import { Button, Card, Switch } from '@/shared/ui';
 import { LinkIcon, LogOutIcon, MoonIcon, SunIcon, TrophyIcon, HistoryIcon } from '@/shared/ui/icons';
@@ -41,7 +40,6 @@ export function RoomHeader({ roomName, roomId, deckName, inviteLink, onShowHisto
       // Современный API
       await navigator.clipboard.writeText(textToCopy);
       setCopyState('copied');
-      toast.success('Ссылка скопирована');
       window.setTimeout(() => setCopyState('idle'), 1800);
     } catch {
       // Fallback для старых браузеров
@@ -57,10 +55,9 @@ export function RoomHeader({ roomName, roomId, deckName, inviteLink, onShowHisto
         document.execCommand('copy');
         textArea.remove();
         setCopyState('copied');
-        toast.success('Ссылка скопирована');
         window.setTimeout(() => setCopyState('idle'), 1800);
       } catch {
-        toast.error('Не удалось скопировать ссылку');
+        setCopyState('idle');
       }
     }
   };

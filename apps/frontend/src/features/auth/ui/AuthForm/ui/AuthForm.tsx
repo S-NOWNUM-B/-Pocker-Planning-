@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link, Form, useActionData, useNavigation } from 'react-router-dom';
+import { Link, useActionData, useNavigation, useSubmit } from 'react-router-dom';
 import type { z } from 'zod';
 import { Button, Input } from '@/shared/ui';
 import { LoginSchema, RegisterSchema } from '../../../model/schemas';
@@ -33,20 +33,36 @@ const registerDefaults = {
 export function AuthForm({ mode }: AuthFormProps) {
   const navigation = useNavigation();
   const actionData = useActionData() as { error?: string } | undefined;
+  const submit = useSubmit();
 
   const schema = useMemo(() => (mode === 'login' ? LoginSchema : RegisterSchema), [mode]);
 
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(schema),
+    mode: 'onSubmit',
     defaultValues: mode === 'login' ? loginDefaults : registerDefaults,
   });
 
   const isRegister = mode === 'register';
-  const isSubmitting = navigation.state === 'submitting';
   const submitAction = isRegister ? '/register' : '/login';
+  const isSubmitting = navigation.state === 'submitting';
+
+  const handleValidSubmit = (values: AuthFormValues) => {
+    const formData = new FormData();
+
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+
+    if (isRegister) {
+      formData.append('name', values.name || '');
+      formData.append('confirmPassword', values.confirmPassword || '');
+    }
+
+    submit(formData, { method: 'post', action: submitAction });
+  };
 
   return (
-    <Form method="post" action={submitAction} className="space-y-4">
+    <form noValidate onSubmit={form.handleSubmit(handleValidSubmit)} className="space-y-4">
       <Input
         label="Email"
         type="email"
@@ -110,6 +126,6 @@ export function AuthForm({ mode }: AuthFormProps) {
           {isRegister ? 'Войти' : 'Зарегистрироваться'}
         </Link>
       </p>
-    </Form>
+    </form>
   );
 }

@@ -21,7 +21,7 @@
  * @param className — дополнительный CSS-класс
  */
 import { useState } from 'react';
-import { Input, ConfirmDialog } from '@/shared/ui';
+import { Input, ConfirmDialog, Badge } from '@/shared/ui';
 import { Button } from '@/shared/ui';
 import { EditIcon, TrashIcon } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib';
@@ -112,42 +112,33 @@ export function TaskSidebar({
         />
 
         <div className="flex gap-1">
-          <button
+          <Button
             type="button"
+            variant={filter === 'all' ? 'primary' : 'subtle'}
+            size="sm"
             onClick={() => setFilter('all')}
-            className={cn(
-              'flex-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors',
-              filter === 'all'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-secondary/50 text-muted-foreground hover:bg-secondary',
-            )}
+            className="flex-1 text-xs"
           >
-            Все ({tasks.length})
-          </button>
-          <button
+            Все
+          </Button>
+          <Button
             type="button"
+            variant={filter === 'pending' ? 'primary' : 'subtle'}
+            size="sm"
             onClick={() => setFilter('pending')}
-            className={cn(
-              'flex-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors',
-              filter === 'pending'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-secondary/50 text-muted-foreground hover:bg-secondary',
-            )}
+            className="flex-1 text-xs"
           >
-            Не оценённые ({tasks.filter((t) => !t.estimate).length})
-          </button>
-          <button
+            Не оценённые
+          </Button>
+          <Button
             type="button"
+            variant={filter === 'estimated' ? 'primary' : 'subtle'}
+            size="sm"
             onClick={() => setFilter('estimated')}
-            className={cn(
-              'flex-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors',
-              filter === 'estimated'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-secondary/50 text-muted-foreground hover:bg-secondary',
-            )}
+            className="flex-1 text-xs"
           >
-            Оценённые ({tasks.filter((t) => t.estimate).length})
-          </button>
+            Оценённые
+          </Button>
         </div>
       </div>
 
@@ -219,9 +210,7 @@ export function TaskSidebar({
                     <span className="line-clamp-2 text-sm font-medium">{task.title}</span>
                     <div className="flex items-center gap-1.5">
                       {task.estimate && (
-                        <span className="shrink-0 rounded-lg bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
-                          {task.estimate} SP
-                        </span>
+                        <Badge label={`${task.estimate} SP`} color="primary" shape="rounded" />
                       )}
                     </div>
                   </div>
@@ -232,11 +221,12 @@ export function TaskSidebar({
                       <Button
                         type="button"
                         variant="ghost"
+                        size="icon"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleStartEdit(task);
                         }}
-                        className="h-7 w-7 p-0 text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                        className="text-muted-foreground hover:bg-primary/10 hover:text-primary"
                         title="Редактировать задачу"
                       >
                         <EditIcon className="h-4 w-4" />
@@ -246,11 +236,12 @@ export function TaskSidebar({
                       <Button
                         type="button"
                         variant="ghost"
+                        size="icon"
                         onClick={(e) => {
                           e.stopPropagation();
                           setDeleteConfirm({ id: task.id, title: task.title });
                         }}
-                        className="h-7 w-7 p-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                        className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                         title="Удалить задачу"
                       >
                         <TrashIcon className="h-4 w-4" />
@@ -270,7 +261,7 @@ export function TaskSidebar({
           onChange={(event) => onNewTaskTitleChange(event.target.value)}
           placeholder="Новая задача"
           className="h-11 w-full"
-          style={{ paddingRight: '2.75rem' }}
+          style={{ paddingRight: '4.75rem' }}
           maxLength={240}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
@@ -278,19 +269,17 @@ export function TaskSidebar({
             }
           }}
         />
-        {newTaskTitle.length > 0 && (
-          <div
-            className={`mt-1 text-right text-xs ${
-              newTaskTitle.length > 220
-                ? 'text-destructive'
-                : newTaskTitle.length > 200
-                  ? 'text-amber-500'
-                  : 'text-muted-foreground'
-            }`}
-          >
-            {newTaskTitle.length}/240
-          </div>
-        )}
+        <span
+          className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
+            newTaskTitle.length > 220
+              ? 'text-destructive'
+              : newTaskTitle.length > 200
+                ? 'text-amber-500'
+                : 'text-muted-foreground'
+          }`}
+        >
+          {newTaskTitle.length}/240
+        </span>
       </div>
 
       <ConfirmDialog

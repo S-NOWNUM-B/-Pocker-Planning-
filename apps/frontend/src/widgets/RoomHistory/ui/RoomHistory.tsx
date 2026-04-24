@@ -13,7 +13,7 @@
  * @param isOpen — открыто ли модальное окно
  * @param onClose — обработчик закрытия
  */
-import { Modal } from '@/shared/ui';
+import { Modal, Badge } from '@/shared/ui';
 import type { RoomHistoryItem } from '@/entities/room/model/types';
 
 interface RoomHistoryProps {
@@ -25,7 +25,12 @@ interface RoomHistoryProps {
 export function RoomHistory({ history, isOpen, onClose }: RoomHistoryProps) {
   if (history.length === 0) {
     return (
-      <Modal isOpen={isOpen} onClose={onClose} title="История голосований">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="История голосований"
+        className="max-w-[min(96vw,72rem)]"
+      >
         <div className="py-8 text-center text-muted-foreground">
           История голосований пуста. Завершите хотя бы один раунд, чтобы увидеть результаты.
         </div>
@@ -34,8 +39,13 @@ export function RoomHistory({ history, isOpen, onClose }: RoomHistoryProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="История голосований">
-      <div className="max-h-96 overflow-y-auto">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="История голосований"
+      className="max-w-[min(96vw,72rem)]"
+    >
+      <div className="max-h-[70vh] overflow-y-auto">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-card">
             <tr className="border-b border-border">
@@ -52,9 +62,7 @@ export function RoomHistory({ history, isOpen, onClose }: RoomHistoryProps) {
               <tr key={item.id} className="border-b border-border/50 hover:bg-secondary/30">
                 <td className="px-3 py-2.5 text-left">{item.task_title}</td>
                 <td className="px-3 py-2.5 text-center">
-                  <span className="inline-block rounded-lg bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
-                    {item.result_value} SP
-                  </span>
+                  <Badge label={`${item.result_value} SP`} color="primary" shape="rounded" />
                 </td>
                 <td className="px-3 py-2.5 text-center text-muted-foreground">
                   {item.average_score !== null ? item.average_score.toFixed(1) : '—'}

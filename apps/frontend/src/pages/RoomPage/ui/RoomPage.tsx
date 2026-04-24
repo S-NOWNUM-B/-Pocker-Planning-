@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Navigate } from 'react-router-dom';
-import { toast } from 'sonner';
 import { useSession } from '@/app/providers';
 import { roomApi } from '@/entities/room';
 import {
@@ -17,7 +16,7 @@ import {
   handleSelectTaskAction,
 } from '@/features/task-management/lib/roomTaskActions';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import { Card, Spinner } from '@/shared/ui';
+import { Card, Spinner, LoadingSpinner } from '@/shared/ui';
 import { getLocalSession, loadRoomSnapshotWithToken, roomRefLooksLikeCode } from '@/shared/lib/room';
 import { persistRoomSession } from '@/shared/lib/session/persistRoomSession';
 import { SessionManager } from '@/shared/lib/session';
@@ -119,10 +118,6 @@ export function RoomPage() {
       if (context?.previousSnapshot) {
         queryClient.setQueryData(getRoomQueryKey(), context.previousSnapshot);
       }
-      toast.error(error?.message || 'Не удалось добавить задачу');
-    },
-    onSuccess: () => {
-      toast.success('Задача добавлена');
     },
     onSettled: () => {
       refreshRoomData();
@@ -153,10 +148,6 @@ export function RoomPage() {
       if (context?.previousSnapshot) {
         queryClient.setQueryData(getRoomQueryKey(), context.previousSnapshot);
       }
-      toast.error(error?.message || 'Не удалось обновить задачу');
-    },
-    onSuccess: () => {
-      toast.success('Задача обновлена');
     },
     onSettled: () => {
       refreshRoomData();
@@ -184,10 +175,6 @@ export function RoomPage() {
       if (context?.previousSnapshot) {
         queryClient.setQueryData(getRoomQueryKey(), context.previousSnapshot);
       }
-      toast.error(error?.message || 'Не удалось удалить задачу');
-    },
-    onSuccess: () => {
-      toast.success('Задача удалена');
     },
     onSettled: () => {
       refreshRoomData();
@@ -230,7 +217,6 @@ export function RoomPage() {
       if (context?.previousSnapshot) {
         queryClient.setQueryData(getRoomQueryKey(), context.previousSnapshot);
       }
-      toast.error(error?.message || 'Не удалось выбрать задачу');
     },
     onSettled: () => {
       refreshRoomData();
@@ -276,10 +262,6 @@ export function RoomPage() {
       if (context?.previousSnapshot) {
         queryClient.setQueryData(getRoomQueryKey(), context.previousSnapshot);
       }
-      toast.error(error?.message || 'Не удалось отправить голос');
-    },
-    onSuccess: () => {
-      toast.success('Голос принят');
     },
     onSettled: () => {
       refreshRoomData();
@@ -290,10 +272,6 @@ export function RoomPage() {
     mutationFn: (roundId: string) => roomApi.revealRound(roomId as string, roundId, roomAccessToken),
     onSuccess: () => {
       refreshRoomData();
-      toast.success('Карты раскрыты');
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || 'Не удалось раскрыть карты');
     },
   });
 
@@ -301,10 +279,6 @@ export function RoomPage() {
     mutationFn: (roundId: string) => roomApi.resetRound(roomId as string, roundId, roomAccessToken),
     onSuccess: () => {
       refreshRoomData();
-      toast.success('Раунд сброшен, голосуйте заново');
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || 'Не удалось сбросить раунд');
     },
   });
 
@@ -468,26 +442,7 @@ export function RoomPage() {
       {!wsConnected && canConnectWs && (
         <div className="fixed top-16 left-1/2 z-50 -translate-x-1/2 animate-in slide-in-from-top-2">
           <div className="flex items-center gap-2 rounded-xl border border-amber-500/50 bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-600 shadow-lg backdrop-blur dark:text-amber-400">
-            <svg
-              className="h-4 w-4 animate-spin"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
+            <LoadingSpinner className="h-4 w-4" />
             <span>Переподключение...</span>
           </div>
         </div>
