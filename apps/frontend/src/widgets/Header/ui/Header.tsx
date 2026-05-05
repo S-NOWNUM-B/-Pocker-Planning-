@@ -69,14 +69,14 @@ export function Header({
           )}
 
           <div className="flex h-10 items-center gap-1.5 rounded-xl border border-border bg-card/70 px-2">
-            {theme === 'dark' ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
+            {theme === 'dark' ? <MoonIcon className="h-4 w-4" /> : <SunIcon className="h-4 w-4" />}
             <Switch
               checked={theme === 'dark'}
               onChange={(isDark) => setTheme(isDark ? 'dark' : 'light')}
               label="Переключить тему"
             />
             <span className="hidden text-left text-xs sm:inline sm:whitespace-nowrap">
-              {theme === 'dark' ? 'Светлая' : 'Тёмная'}
+              {theme === 'dark' ? 'Темная' : 'Светлая'}
             </span>
           </div>
 
@@ -98,7 +98,7 @@ export function Header({
                     className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors data-focus:bg-secondary/80"
                   >
                     <UsersIcon className="h-4 w-4" />
-                    <span>Команты</span>
+                    <span>Мои комнаты</span>
                   </Link>
                 </MenuItem>
 

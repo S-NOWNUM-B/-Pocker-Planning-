@@ -33,32 +33,32 @@ export function ParticipantsList({ players, hasActiveTask, isRevealed, className
   const renderVisibleVote = (value: string) => {
     if (value === '☕' || value === 'break') {
       return (
-        <span className="flex h-5 w-5 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary shadow-sm">
-          <CoffeeIcon className="h-3.5 w-3.5" />
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <CoffeeIcon className="h-3 w-3" />
         </span>
       );
     }
 
     if (value === '?') {
       return (
-        <span className="flex h-5 w-5 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary shadow-sm">
-          <HelpCircleIcon className="h-3.5 w-3.5" />
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <HelpCircleIcon className="h-3 w-3" />
         </span>
       );
     }
 
-    return value;
+    return <span className="text-xs font-black">{value}</span>;
   };
 
   return (
     <section className={cn('w-full', className)}>
-      <Card className="h-auto border border-border/70 bg-card/90 p-2.5 shadow-lg backdrop-blur">
-        <div className="mb-1.5 flex items-center justify-between gap-3">
-          <h2 className="text-base font-bold text-foreground">Участники</h2>
-          <span className="text-sm text-muted-foreground">{players.length}</span>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between px-1">
+          <h2 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">Участники</h2>
+          <span className="text-xs font-medium text-muted-foreground/60">{players.length}</span>
         </div>
 
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
           {players.map((player) => {
             const hasVote = player.vote !== null;
             const voteIsVisible = isRevealed && hasVote;
@@ -67,31 +67,38 @@ export function ParticipantsList({ players, hasActiveTask, isRevealed, className
             return (
               <div
                 key={player.id}
-                className="flex min-w-9.5rem items-center gap-2 rounded-xl border border-border/80 bg-secondary/35 px-2 py-1.5"
+                className={cn(
+                  'group relative flex min-w-[140px] items-center gap-3 rounded-2xl border bg-card/30 p-2 backdrop-blur-sm transition-all duration-300',
+                  hasVote && !voteIsVisible ? 'border-primary/30 ring-1 ring-primary/10' : 'border-border/50'
+                )}
               >
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-[0.65rem] font-bold text-primary-foreground shadow-sm">
+                {/* Subtle glow for players who voted */}
+                {hasVote && !voteIsVisible && (
+                  <div className="absolute inset-0 rounded-2xl bg-primary/5 blur-md pointer-events-none" />
+                )}
+
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-foreground/20 text-[10px] font-bold text-primary-foreground shadow-sm transition-transform">
                   {player.name.slice(0, 1).toUpperCase()}
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[0.82rem] font-semibold text-card-foreground">
+                  <div className="truncate text-xs font-bold text-foreground transition-colors">
                     {player.name}
                   </div>
                   {player.role ? (
-                    <div className="text-[0.65rem] text-muted-foreground">{player.role}</div>
+                    <div className="truncate text-[10px] text-muted-foreground">{player.role}</div>
                   ) : null}
                 </div>
 
                 <div
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border text-[0.65rem] font-black ${
+                  className={cn(
+                    'relative flex h-6 w-6 shrink-0 items-center justify-center rounded-md border text-[10px] font-bold transition-all duration-300',
                     voteIsVisible
-                      ? 'border-primary bg-card/90 text-foreground'
+                      ? 'border-primary/50 bg-background text-foreground'
                       : hasVote
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : isWaitingForTask
-                          ? 'border-border bg-card/70 text-muted-foreground'
-                          : 'border-border bg-card/70 text-muted-foreground'
-                  }`}
+                        ? 'border-primary bg-primary text-primary-foreground shadow-sm animate-vote-pulse'
+                        : 'border-border/50 bg-card/50 text-muted-foreground/40'
+                  )}
                   aria-label={`Голос ${player.name}: ${
                     voteIsVisible
                       ? player.vote
@@ -105,9 +112,9 @@ export function ParticipantsList({ players, hasActiveTask, isRevealed, className
                   {voteIsVisible ? (
                     renderVisibleVote(player.vote as string)
                   ) : hasVote ? (
-                    <CheckIcon className="h-3.5 w-3.5" />
+                    <CheckIcon className="h-3 w-3" />
                   ) : isWaitingForTask ? (
-                    <TargetIcon className="h-3.5 w-3.5" />
+                    <TargetIcon className="h-3 w-3" />
                   ) : (
                     '...'
                   )}
@@ -116,7 +123,7 @@ export function ParticipantsList({ players, hasActiveTask, isRevealed, className
             );
           })}
         </div>
-      </Card>
+      </div>
     </section>
   );
 }

@@ -17,16 +17,19 @@ import {
 } from '@/features/task-management/lib/roomTaskActions';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { Card, Spinner } from '@/shared/ui';
+import { TrophyIcon } from '@/shared/ui/icons';
 import { getLocalSession, loadRoomSnapshotWithToken, roomRefLooksLikeCode } from '@/shared/lib/room';
 import { persistRoomSession } from '@/shared/lib/session/persistRoomSession';
 import { ParticipantsList, RoomFooter, RoomHeader, RoomResults, TaskSidebar } from '@/widgets';
 import { useRoomParams } from '../lib/useRoomParams';
+
 
 export function RoomPage() {
   const { roomId: roomRef } = useRoomParams();
   const { user } = useSession();
   const queryClient = useQueryClient();
   const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [pendingCard, setPendingCard] = useState<string | null>(null);
   const [resolvedRoomRef, setResolvedRoomRef] = useState(roomRef);
   const localSession = getLocalSession();
   const roomAccessToken = user ? undefined : localSession?.roomAccessToken;
@@ -54,6 +57,7 @@ export function RoomPage() {
       queryClient.invalidateQueries({ queryKey: ['room-history', roomId] }),
     ]);
   };
+
 
   const createTaskMutation = useMutation({
     mutationFn: (title: string) => roomApi.createTask(roomId as string, title, roomAccessToken),
@@ -139,9 +143,14 @@ export function RoomPage() {
     revealMutation.isPending ||
     finalizeMutation.isPending;
 
-  const handleSelectCard = async (card: string) => {
+  const handleSelectCard = (card: string) => {
+    setPendingCard(card);
+  };
+
+  const handleConfirmVote = async () => {
+    if (!pendingCard) return;
     await handleSelectCardAction({
-      card,
+      card: pendingCard,
       activeTask,
       isBusy,
       snapshot,
@@ -149,6 +158,7 @@ export function RoomPage() {
       startRound: (taskId) => startRoundMutation.mutateAsync(taskId),
       vote: (payload) => voteMutation.mutateAsync(payload),
     });
+    setPendingCard(null);
   };
 
   const handleReveal = async () => {
@@ -194,10 +204,25 @@ export function RoomPage() {
     });
   };
 
+  const handleFinalize = async (resultValue: string) => {
+    if (!isOwner || !snapshot.active_round) return;
+    await finalizeMutation.mutateAsync({
+      roundId: snapshot.active_round.id,
+      resultValue,
+    });
+  };
+
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden">
-      <div className="pointer-events-none absolute -left-24 top-20 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 bottom-24 h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
+    <div className="relative flex h-screen flex-col overflow-hidden bg-background text-foreground selection:bg-primary/30">
+      {/* Background Decoration */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-1/4 -top-1/4 h-1/2 w-1/2 rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute -right-1/4 -bottom-1/4 h-1/2 w-1/2 rounded-full bg-accent/5 blur-[120px]" />
+        <div
+          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
+          style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '40px 40px' }}
+        />
+      </div>
 
       <RoomHeader
         roomName={snapshot.room.name}
@@ -219,27 +244,33 @@ export function RoomPage() {
         />
 
         <div className="grid min-w-0 min-h-0 gap-3 lg:grid-rows-[auto_minmax(0,1.8fr)_auto]">
-          <Card className="border border-border/70 bg-card/90 p-3 shadow-sm backdrop-blur">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  Создатель комнаты
-                </div>
-                <div className="mt-1 text-sm font-semibold text-foreground">
-                  {isOwner ? currentUserName : roomOwnerName}
-                </div>
+          <div className="flex items-center gap-3 rounded-2xl border border-border/50 bg-card/30 p-3 backdrop-blur-sm">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+              <TrophyIcon className="h-4 w-4" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                Создатель комнаты
+              </div>
+              <div className="truncate text-xs font-bold text-foreground">
+                {isOwner ? currentUserName : roomOwnerName}
               </div>
             </div>
-          </Card>
+          </div>
 
           <RoomResults
             activeTaskTitle={activeTask ? activeTask.title : null}
             average={average}
+            cards={snapshot.room.deck.cards}
             isRevealed={isRevealed}
+            isFinalized={false}
             allPlayersVoted={allPlayersVoted}
             anyPlayerVoted={anyPlayerVoted}
             onReveal={handleReveal}
+            onFinalize={handleFinalize}
             onNextTask={handleNextTask}
+            isOwner={isOwner}
+            snapshot={snapshot}
             className="h-auto min-h-48 lg:h-full"
           />
 
@@ -254,11 +285,11 @@ export function RoomPage() {
 
       <RoomFooter
         cards={snapshot.room.deck.cards}
-        selectedCard={selectedCard}
+        selectedCard={pendingCard}
         disabled={isRevealed || !activeTask || isBusy}
-        onSelectCard={(card) => {
-          void handleSelectCard(card);
-        }}
+        isVoting={isBusy}
+        onSelectCard={handleSelectCard}
+        onConfirmVote={handleConfirmVote}
       />
     </div>
   );

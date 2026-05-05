@@ -15,6 +15,7 @@
  * @param onSelectCard — выбор карты
  */
 import { Button } from '@/shared/ui';
+import { cn } from '@/shared/lib';
 import { CheckIcon, CoffeeIcon, HelpCircleIcon, TrophyIcon } from '@/shared/ui/icons';
 
 interface VotingCardsProps {
@@ -31,58 +32,51 @@ export function VotingCards({
   onSelectCard,
 }: VotingCardsProps) {
   return (
-    <section className="relative z-20 border-t border-border/70 bg-background/40 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4 pb-3 pt-2 sm:px-6 lg:px-8">
-        <div className="rounded-t-3xl border border-border/70 bg-card/88 p-3 shadow-[0_-12px_38px_-26px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-4">
-          <div className="mb-2 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              <TrophyIcon className="h-3.5 w-3.5" />
-              Карты голосования
-            </div>
-            <div className="flex items-center gap-1.5 text-[0.72rem] text-muted-foreground">
-              <CheckIcon className="h-3.5 w-3.5" />
-              {selectedCard ? `Выбрано: ${selectedCard}` : 'Карта не выбрана'}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(2.85rem,1fr))] gap-2 justify-items-center sm:grid-cols-[repeat(auto-fit,minmax(3.15rem,1fr))] sm:gap-3">
-            {cards.map((card) => (
-              <Button
-                key={card}
-                type="button"
-                disabled={disabled}
-                onClick={() => onSelectCard(card)}
-                variant={selectedCard === card ? 'primary' : 'outline'}
-                className="flex h-14 w-11 rounded-xl border text-sm font-black shadow-sm transition-transform duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-45 sm:h-16 sm:w-12 sm:text-base"
-              >
-                {card === '☕' || card === 'break' ? (
-                  <span
-                    className={`flex h-7 w-7 items-center justify-center rounded-full ${
-                      selectedCard === card
-                        ? 'bg-white/20 text-white'
-                        : 'bg-primary/10 text-primary'
-                    }`}
-                  >
-                    <CoffeeIcon className="h-5 w-5" strokeWidth={2.8} />
-                  </span>
-                ) : card === '?' ? (
-                  <span
-                    className={`flex h-7 w-7 items-center justify-center rounded-full ${
-                      selectedCard === card
-                        ? 'bg-white/20 text-white'
-                        : 'bg-primary/10 text-primary'
-                    }`}
-                  >
-                    <HelpCircleIcon className="h-5 w-5" strokeWidth={2.8} />
-                  </span>
-                ) : (
-                  card
-                )}
-              </Button>
-            ))}
-          </div>
+    <div className="flex flex-col w-full">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+          <TrophyIcon className="h-3 w-3 text-primary" />
+          Карты голосования
+        </div>
+        <div className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground/60">
+          <CheckIcon className={cn('h-3 w-3 transition-colors', selectedCard ? 'text-primary' : 'text-muted-foreground/40')} />
+          {selectedCard ? `Выбрано: ${selectedCard}` : 'Карта не выбрана'}
         </div>
       </div>
-    </section>
+
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(2.8rem,1fr))] gap-2 justify-items-center sm:grid-cols-[repeat(auto-fit,minmax(3rem,1fr))] sm:gap-3">
+        {cards.map((card) => {
+          const isSelected = selectedCard === card;
+          return (
+            <Button
+              key={card}
+              type="button"
+              disabled={disabled}
+              onClick={() => onSelectCard(card)}
+              variant="ghost"
+              className={cn(
+                'flex h-12 w-10 rounded-xl border text-sm font-black transition-all duration-200 sm:h-14 sm:w-12 sm:text-base',
+                isSelected
+                  ? 'border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105 ring-2 ring-primary/20'
+                  : 'border-border/50 bg-card/50 text-foreground hover:border-primary/30 hover:bg-card hover:-translate-y-0.5',
+                'disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:scale-100'
+              )}
+            >
+              {card === '☕' || card === 'break' ? (
+                <span className={cn('flex h-6 w-6 items-center justify-center rounded-full', isSelected ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary')}>
+                  <CoffeeIcon className="h-4 w-4" strokeWidth={2.8} />
+                </span>
+              ) : card === '?' ? (
+                <span className={cn('flex h-6 w-6 items-center justify-center rounded-full', isSelected ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary')}>
+                  <HelpCircleIcon className="h-4 w-4" strokeWidth={2.8} />
+                </span>
+              ) : (
+                card
+              )}
+            </Button>
+          );
+        })}
+      </div>
+    </div>
   );
 }

@@ -47,59 +47,56 @@ export function RoomHeader({ roomName, roomId, deckName, inviteLink }: RoomHeade
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-card/88 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex min-w-0 items-center gap-3">
-          <Link to="/dashboard" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15 text-primary">
-              <TrophyIcon className="h-5 w-5" />
+    <header className="sticky top-0 z-40 border-b border-border/50 bg-background/60 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center gap-4">
+          <Link to="/dashboard" className="flex items-center gap-2 group">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform group-hover:scale-110">
+              <TrophyIcon className="h-4 w-4" />
             </div>
-            <span className="text-xl font-black tracking-tight text-foreground">
+            <span className="text-lg font-bold tracking-tight text-foreground">
               Poker<span className="text-primary">.</span>Planning
             </span>
           </Link>
 
           <div className="hidden min-w-0 items-center gap-2 text-xs text-muted-foreground md:flex">
-            <span className="max-w-56 truncate font-semibold text-foreground/90">{roomName}</span>
-            <span className="text-muted-foreground/60">•</span>
-            <span className="truncate">/{roomId}</span>
-            <span className="rounded-full border border-border bg-secondary/45 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-foreground/90">
+            <span className="max-w-48 truncate font-medium text-foreground/80">{roomName}</span>
+            <span className="text-muted-foreground/40">/</span>
+            <span className="truncate font-mono opacity-60">{roomId}</span>
+            <span className="rounded-md border border-border bg-secondary/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               {deckName}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             onClick={handleCopyLink}
-            className="h-10 px-4"
+            className="h-9 px-3 text-xs font-medium transition-colors hover:bg-primary/10 hover:text-primary"
           >
-            <LinkIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">
+            <LinkIcon className="mr-1.5 h-3.5 w-3.5" />
+            <span>
               {copyState === 'copied' ? 'Скопировано' : 'Пригласить'}
             </span>
           </Button>
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             onClick={handleExitRoom}
-            className="h-10 px-4 border-primary/60 text-foreground hover:border-destructive/75 hover:bg-destructive/10 hover:text-destructive"
+            className="h-9 px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
           >
-            <LogOutIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">Выйти</span>
+            <LogOutIcon className="mr-1.5 h-3.5 w-3.5" />
+            <span>Выйти</span>
           </Button>
-          <div className="flex h-10 items-center gap-1.5 rounded-xl border border-border bg-card/70 px-2">
-            {theme === 'dark' ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
+          <div className="ml-1 flex h-8 items-center gap-2 rounded-full border border-border bg-secondary/20 px-1.5">
+            {theme === 'dark' ? <MoonIcon className="ml-1 h-3.5 w-3.5" /> : <SunIcon className="ml-1 h-3.5 w-3.5" />}
             <Switch
               checked={theme === 'dark'}
               onChange={(isDark) => setTheme(isDark ? 'dark' : 'light')}
-              label="Переключить тему"
+              label="Тема"
             />
-            <span className="hidden text-left text-xs sm:inline sm:whitespace-nowrap">
-              {theme === 'dark' ? 'Светлая' : 'Тёмная'}
-            </span>
           </div>
         </div>
       </div>
